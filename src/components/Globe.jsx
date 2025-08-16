@@ -1,9 +1,9 @@
-// src/components/Globe.jsx
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 export default function Globe() {
   const mountRef = useRef(null);
+  const requestRef = useRef(null); // for animation frame cleanup
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -13,9 +13,13 @@ export default function Globe() {
       0.1,
       1000
     );
+
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    mountRef.current.appendChild(renderer.domElement);
+
+    if (mountRef.current) {
+      mountRef.current.appendChild(renderer.domElement);
+    }
 
     // 🌍 Globe (wireframe sphere)
     const globeGeometry = new THREE.SphereGeometry(2.5, 64, 64);
@@ -47,29 +51,36 @@ export default function Globe() {
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
 
-    // Camera
     camera.position.z = 6;
 
     // Animation
-    function animate() {
-      requestAnimationFrame(animate);
+    const animate = () => {
       globe.rotation.y += 0.002;
       particlesMesh.rotation.y -= 0.0007;
       renderer.render(scene, camera);
-    }
+      requestRef.current = requestAnimationFrame(animate);
+    };
     animate();
 
-    // Resize
+    // Handle window resize
     const handleResize = () => {
+      if (!renderer) return;
       renderer.setSize(window.innerWidth, window.innerHeight);
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
     };
     window.addEventListener("resize", handleResize);
 
+    // Cleanup on unmount
     return () => {
-      mountRef.current.removeChild(renderer.domElement);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current); // stop animation
+      }
+      if (mountRef.current && renderer.domElement) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
       window.removeEventListener("resize", handleResize);
+      renderer.dispose(); // free WebGL resources
     };
   }, []);
 
