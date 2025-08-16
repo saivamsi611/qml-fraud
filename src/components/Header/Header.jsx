@@ -14,6 +14,9 @@ export default function Header() {
       <nav>
         <button className="login-btn" onClick={handleLogin}>
           Login
+          </button>
+          <button className="main-page" onClick={() => navigate("/main")}>
+Main Page
         </button>
       </nav>
     </header>

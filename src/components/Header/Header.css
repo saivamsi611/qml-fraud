@@ -33,9 +33,27 @@ nav {
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s ease-in-out;
-  width: auto;             /* button shrinks to fit text */
+  width: auto;   
+  margin-right: 10px;          /* button shrinks to fit text */
 }
 
 .login-btn:hover {
+  background: #00bcd4;
+}
+.main-page {
+  display: inline-block;
+  background: #00e0ff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  width: auto;    
+  padding: auto;         /* button shrinks to fit text */
+}
+
+.main-page:hover {
   background: #00bcd4;
 }
