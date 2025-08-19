@@ -5,6 +5,12 @@
   font-family: sans-serif;
 }
 
+/* .ProjectDirectory h2,
+.ProjectDirectory ul {
+  margin: 0; 
+  padding: 0;
+} */
+
 /* Top bar */
 /* Top bar */
 .topbar {
@@ -128,4 +134,99 @@
   margin-left: auto;
   flex-grow: 1;
   padding: 1rem;
+}
+
+.flex-container {
+  display: flex;
+  gap: 0px;              
+  /* padding: 20px; */
+}
+
+.outer-box {
+  width: 20vw;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.inner-box {
+  width: 84%; 
+  gap: 10px;              /* space between inner boxes */
+  background: #4caf50;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+
+.right-space {
+  width: 300px;
+  display: flex;
+  margin-left: auto;
+}
+
+.donut-box{
+  scale: 1.2;
+}
+
+.ProjectDirectory {
+  height: 300px;
+  width: 300px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: sans-serif;
+}
+
+.ProjectDirectory h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #333;
+}
+
+/* .ProjectDirectory hr {
+  margin: 10px 0;
+  border: none;
+  border-top: 1px solid #ddd;
+} */
+
+.ProjectDirectory ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 15px;
+}
+
+.ProjectDirectory li {
+  padding: 8px 0;
+  color: #555;
+  font-size: 16px;
+}
+
+.ProjectDirectory button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #4caf50;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.ProjectDirectory button:hover {
+  background: #45a049;
+}
+
+.add-icon {
+  color: white;
+  font-size: 22px;
 }

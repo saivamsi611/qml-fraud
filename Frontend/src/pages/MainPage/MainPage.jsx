@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./MainPage.css";
 import Globe from "../../components/Globe";
+import DonutChart from "../../components/ModelErrorDonutChart/MEDonutChart";
+import { FaPlusCircle } from "react-icons/fa";
 
 export default function App() {
   const [open, setOpen] = useState(false);
@@ -39,7 +41,7 @@ export default function App() {
           </ul>
         </div>
         <div className="menu-bottom">
-          <hr/>
+          <hr />
           <ul>
             <li>About Us</li>
             <li>Logout</li>
@@ -49,13 +51,36 @@ export default function App() {
 
       {/* Main content */}
       <main className="content">
-        <Globe/>
-        <div className="welcome-message">
-          <h2>Welcome to the Fraud Detection Dashboard</h2>
-          <p>Explore the latest insights and analytics.</p>
+        <Globe />
+
+        <div class="flex-container">
+          <div class="outer-box">
+            <div class="inner-box">Box 1A</div>
+            <div class="inner-box">Box 1B</div>
+          </div>
+          <div class="outer-box"  style={{ borderLeft: "2px solid black" }}>
+            <div class="inner-box">Box 2A</div>
+            <div class="inner-box">Box 2B</div>
+          </div>
+          <div class="outer-box" style={{ borderLeft: "2px solid black" }}>
+            <div class="inner-box">Box 3A</div>
+            <div class="inner-box">Box 3B</div>
+          </div>
         </div>
+        <aside className="right-space">
+          <DonutChart accuracy={85} className="donut"/>
+         </aside>
+         <div className="ProjectDirectory">
+          <h2>Project Directory</h2>
+          <hr/>
+          <ul>
+            <li>None</li>
+          </ul>
+          <button>
+            <FaPlusCircle className="add-icon" />
+          </button>
+         </div>
       </main>
-      
     </div>
   );
 }
