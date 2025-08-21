@@ -1,0 +1,19 @@
+.donut-box {
+  width: 300px;
+  text-align: center;
+}
+
+.donut-chart {
+  position: relative;
+  width: 200px;
+  margin: auto;
+}
+
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
+  font-weight: bold;
+}
