@@ -11,7 +11,7 @@ export default function App() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="app">
+    <div className={`app ${open ? "shrink" : ""}`}>
       {/* Top bar with hamburger */}
       <header className="topbar">
         <button className="hamburger" onClick={() => setOpen(!open)}>
@@ -35,8 +35,7 @@ export default function App() {
               <li><Link to="/main">Home</Link></li>
               <li><Link to="/main/dashboard">Dashboard</Link></li>
             <hr />
-              <li><Link to="/main/reports">Reports</Link></li>
-              <li><Link to="/main/analytics">Analytics</Link></li>
+              <li><Link to="/main/ReportsAndAnalyticsPage">Reports & Analytics</Link></li>
             <hr />
               <li><Link to="/main/settings">Settings</Link></li>
               <li><Link to="/main/help">Help</Link></li>
@@ -77,7 +76,7 @@ export default function App() {
 
 
 
-         <MPMarquee
+         <MPMarquee className="marquee"
         width="600px"   // you can also try "600px" or "100%"
         items={[
           "🚀 Fraud Detection Dashboard Ready",

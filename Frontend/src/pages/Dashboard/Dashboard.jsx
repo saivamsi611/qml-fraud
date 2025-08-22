@@ -35,8 +35,7 @@ export default function Dashboard() {
             <li><Link to="/main">Home</Link></li>
             <li><Link to="/main/dashboard">Dashboard</Link></li>
             <hr />
-            <li><Link to="/main/reports">Reports</Link></li>
-            <li><Link to="/main/analytics">Analytics</Link></li>
+            <li><Link to="/main/ReportsAndAnalyticsPage">Reports & Analytics</Link></li>
             <hr />
             <li><Link to="/main/settings">Settings</Link></li>
             <li><Link to="/main/help">Help</Link></li>

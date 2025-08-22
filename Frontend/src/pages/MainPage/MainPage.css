@@ -9,6 +9,12 @@
 *{
   text-decoration: none;
 }
+
+*:visited , a:active, a:hover {
+  text-decoration: none;
+  color: ivory;
+}
+
 /* .ProjectDirectory h2,
 .ProjectDirectory ul {
   margin: 0; 
@@ -19,18 +25,18 @@
 /* Top bar */
 .topbar {
   width: 100%;
-  height: 50px;
+  height: 100px;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: #333;
-  color: white;
+  background: rgb(64, 62, 65)(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
-  /* fix: use justify-content instead of justify-self */
   justify-content: flex-start;  
-  z-index: 1000;
+  z-index: 1;
 }
 
 /* Hamburger button */
@@ -135,7 +141,7 @@
 /* Content */
 .content {
   font-size: large;
-  margin-top: 50px;
+  margin-top: 100px;
   margin-left: auto;
   flex-grow: 1;
   padding: 1rem;
@@ -143,26 +149,28 @@
 
 .flex-container {
   display: flex;
-  gap: 0px;              
+  gap: 0px; 
+  margin-left: 50px;  
   /* padding: 20px; */
 }
 
 .outer-box {
-  width: 20vw;
+  width: 150px;
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  background: #f0f0f0;
-  display: flex;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(18px);  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
 }
 
 .inner-box {
-  width: 84%; 
+  width: 100px; 
   gap: 10px;              /* space between inner boxes */
-  background: #4caf50;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(18px);  display: flex;
   color: white;
   text-align: center;
   padding: 20px;
@@ -175,17 +183,18 @@
 }
 
 .donut-box{
-  scale: 1.2;
+  scale: 1.0;
   margin-left: auto;
   margin-top: -50px;
-  padding-right: 50px;
+  padding-right: 120px;
   padding-bottom: 50px;
 }
 
 .ProjectDirectory {
   height: 300px;
   width: 300px;
-  background: #ffffff;
+  background: rgb(64, 62, 65)(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -197,6 +206,8 @@
   margin: 0 0 10px;
   font-size: 20px;
   color: #333;
+  font-weight: bold;
+  text-align: center;
 }
 
 /* .ProjectDirectory hr {
@@ -231,7 +242,8 @@
 /* UploadSection.css */
 .upload-container {
   height: max-content;
-  background: #000;
+  background: rgb(64, 62, 65)(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
   border: 1px solid #aaa;
   border-radius: 6px;
   padding: 20px;
@@ -252,7 +264,19 @@
   color: white;
   cursor: pointer;
   margin-bottom: 20px;
+  background-color: rgba(0, 255, 255, 0.352);
+  transition: none;
 }
+
+.upload-btn:hover {
+  background-color: rgba(0, 255, 255, 0.352) !important;
+  color: white !important;
+  border-color: #aaa !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
 
 .project-box {
   display: flex;
@@ -268,8 +292,18 @@
   font-size: 16px;
   color: white;
   cursor: pointer;
-  text-align: left;
+  text-align: center;
 }
+
+.project-btn:hover,.project-btn:active, .project-btn:focus {
+  background-color: transparent !important;
+  color: white !important;
+  border-color: #aaa !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
 
 .empty-box {
   width: 80px;
@@ -300,4 +334,36 @@
   padding: auto;
   right: 100px;
   bottom: 50px;
+}
+
+/* Shrink content when sidebar is open */
+.app.shrink {
+  margin-left: 180px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Keep sidebar fixed width in sync */
+.sidebar {
+  width: 180px;
+}
+
+/* Move topbar along with the content when sidebar is open */
+.app.shrink .topbar {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+.app.shrink #profilecontainer{
+  margin-right: 250px;
+  transition: margin-right 0.3s ease;
+}
+
+.app.shrink .hamburger {
+  margin-right: 250px;
+  transition: margin-right 0.3s ease;
+}
+
+.app.shrink .scroll-container{
+  margin-right: -35px;
+  transition: margin-right 0.3s ease;  
 }
