@@ -6,8 +6,11 @@ import MainPage from "./pages/MainPage/MainPage";
 import SignupPage from "./pages/SingupPage/SingupPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Dashboard from "./pages/Dashboard/Dashboard";
+
 import About from "./pages/AboutPage/About";
-import ReportsAndAnalyticsPage from "./pages/ReportsAndAnalyticsPage/ReportsAndAnalyticsPage";
+import ReportsAndAnalytics from "./pages/ReportsAndAnalyticsPage/ReportsAndAnalyticsPage";
+import Settings from './pages/Settings/Settings';
+import Helpus from './pages/HelpusPage/Helpus'; 
 
 function App() {
   return (
@@ -19,7 +22,9 @@ function App() {
       <Route path="/About" element={<About />} />
       <Route path="/main" element={<MainPage/>} />
       <Route path="/main/dashboard" element={<Dashboard />} />
-      <Route path="/main/ReportsAndAnalytics" element={<ReportsAndAnalyticsPage />} />
+      <Route path="/main/ReportsAndAnalytics" element={<ReportsAndAnalytics />} />
+      <Route path="/main/settings" element={<Settings />} />
+      <Route path="/main/help" element={<Helpus />} />
       {/* Add more routes as needed */}
     </Routes>
   );
