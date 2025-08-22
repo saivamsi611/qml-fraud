@@ -1,99 +1,157 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Menu } from "lucide-react";
+import Globe from "../../components/Globe";
 import "./ReportsAndAnalyticsPage.css";
+import {
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  Tooltip,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  BarChart,
+  Bar,
+  ResponsiveContainer,
+} from "recharts";
 
-const Analytics = () => {
-  // Data placeholders (dummy values or null)
-  const totalRings = null;
-  const criticalRisk = null;
-  const totalAmount = null;
-  const totalMembers = null;
+const Sidebar = ({ open }) => (
+  <aside className={`sidebar ${open ? "open" : ""}`}>
+    <div className="menu-top">
+      <ul>
+        <li><Link to="/main">Home</Link></li>
+        <li><Link to="/main/dashboard">Dashboard</Link></li>
+        <hr />
+        <li><Link to="/main/analytics">Analytics</Link></li>
+        <hr />
+        <li><Link to="/main/settings">Settings</Link></li>
+        <li><Link to="/main/help">Help</Link></li>
+        <hr />
+      </ul>
+    </div>
+    <div className="menu-bottom">
+      <ul>
+        <li>About Us</li>
+        <li>Logout</li>
+      </ul>
+    </div>
+  </aside>
+);
 
-  const fraudRings = [
-    {
-      ringId: null,
-      members: [],
-      totalAmount: null,
-      detectionMethod: null,
-      detectionDate: null,
-      riskLevel: null,
-      status: null,
-    },
+const AnalyticsContent = ({ open, setOpen, radarData, lineData, barData }) => (
+  <div className={`analytics-content ${open ? "sidebar-open" : ""}`}>
+    <header className="header">
+      <button className="hamburger" onClick={() => setOpen(!open)}>
+        <Menu size={24} />
+      </button>
+      <h1>Analytics</h1>
+    </header>
+
+    <div className="main-layout">
+      <div className="left-container">
+        <div className="chart-card">
+          <h3>Analytics Overview</h3>
+          <div className="charts-grid">
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart data={radarData}>
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="subject" />
+                  <PolarRadiusAxis />
+                  <Radar
+                    name="Metrics"
+                    dataKey="A"
+                    stroke="#06b6d4"
+                    fill="#06b6d4"
+                    fillOpacity={0.6}
+                  />
+                  <Tooltip />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={lineData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="value" stroke="#06b6d4" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={barData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#06b6d4" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="right-container">
+        <div className="info-box">
+          <h3>Summary</h3>
+          <p>
+            This panel highlights insights, trends, and recommendations across multiple performance metrics. Compare data across departments and track growth visually.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export default function Analytics() {
+  const [open, setOpen] = useState(false);
+
+  const radarData = [
+    { subject: "Sales", A: 120, fullMark: 150 },
+    { subject: "Marketing", A: 98, fullMark: 150 },
+    { subject: "Development", A: 86, fullMark: 150 },
+    { subject: "Support", A: 99, fullMark: 150 },
+    { subject: "IT", A: 85, fullMark: 150 },
+    { subject: "Admin", A: 65, fullMark: 150 },
+  ];
+
+  const lineData = [
+    { name: "Jan", value: 40 },
+    { name: "Feb", value: 60 },
+    { name: "Mar", value: 80 },
+    { name: "Apr", value: 50 },
+  ];
+
+  const barData = [
+    { name: "Q1", value: 300 },
+    { name: "Q2", value: 200 },
+    { name: "Q3", value: 400 },
+    { name: "Q4", value: 250 },
   ];
 
   return (
-    <div className="analytics-container">
-      {/* Top Stats Section */}
-      <div className="stats-container">
-        <div className="stat-card">
-          <h4>Total Rings</h4>
-          <p>{totalRings ?? "--"}</p>
-        </div>
-        <div className="stat-card">
-          <h4>Critical Risk</h4>
-          <p>{criticalRisk ?? "--"}</p>
-        </div>
-        <div className="stat-card">
-          <h4>Total Amount</h4>
-          <p>{totalAmount ? `$${totalAmount}` : "--"}</p>
-        </div>
-        <div className="stat-card">
-          <h4>Total Members</h4>
-          <p>{totalMembers ?? "--"}</p>
-        </div>
+    <div className="analytics">
+      <div className="globe-bg">
+        <Globe />
       </div>
-
-      {/* Fraud Rings Section */}
-      <div className="fraud-section">
-        <h3>🔍 Detected Fraud Rings</h3>
-        {fraudRings.map((ring, index) => (
-          <div key={index} className="fraud-card">
-            <h4>{ring.ringId ?? "ring_xxx - CRITICAL"}</h4>
-            <p><strong>Ring ID:</strong> {ring.ringId ?? "--"}</p>
-            <p><strong>Total Amount:</strong> {ring.totalAmount ? `$${ring.totalAmount}` : "--"}</p>
-            <p><strong>Detection Method:</strong> {ring.detectionMethod ?? "--"}</p>
-            <p><strong>Detection Date:</strong> {ring.detectionDate ?? "--"}</p>
-            <p><strong>Risk Level:</strong> {ring.riskLevel ?? "--"}</p>
-            <p><strong>Status:</strong> {ring.status ?? "--"}</p>
-
-            {/* Members Table */}
-            <h5>👥 Ring Members</h5>
-            <table className="members-table">
-              <thead>
-                <tr>
-                  <th>User ID</th>
-                  <th>Role</th>
-                  <th>Risk Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ring.members.length > 0 ? (
-                  ring.members.map((m, i) => (
-                    <tr key={i}>
-                      <td>{m.userId ?? "--"}</td>
-                      <td>{m.role ?? "--"}</td>
-                      <td>{m.riskScore ?? "--"}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3">No members available</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-
-            {/* Network Visualization Placeholder */}
-            <div className="network-box">
-              <h5>🌐 Network Visualization</h5>
-              <div className="network-placeholder">
-                Network graph will appear here
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <Sidebar open={open} />
+      <AnalyticsContent
+        open={open}
+        setOpen={setOpen}
+        radarData={radarData}
+        lineData={lineData}
+        barData={barData}
+      />
+      {open && <div className="overlay" onClick={() => setOpen(false)} />}
     </div>
   );
-};
-
-export default Analytics;
+}

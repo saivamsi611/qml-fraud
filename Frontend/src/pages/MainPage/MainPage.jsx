@@ -35,7 +35,7 @@ export default function App() {
               <li><Link to="/main">Home</Link></li>
               <li><Link to="/main/dashboard">Dashboard</Link></li>
             <hr />
-              <li><Link to="/main/ReportsAndAnalyticsPage">Reports & Analytics</Link></li>
+              <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
             <hr />
               <li><Link to="/main/settings">Settings</Link></li>
               <li><Link to="/main/help">Help</Link></li>
