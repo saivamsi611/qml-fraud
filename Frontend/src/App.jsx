@@ -6,6 +6,7 @@ import MainPage from "./pages/MainPage/MainPage";
 import SignupPage from "./pages/SingupPage/SingupPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import About from "./pages/AboutPage/About";
 import ReportsAndAnalyticsPage from "./pages/ReportsAndAnalyticsPage/ReportsAndAnalyticsPage";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/Forgotpassword" element={<ForgotPassword />} />
+      <Route path="/About" element={<About />} />
       <Route path="/main" element={<MainPage/>} />
       <Route path="/main/dashboard" element={<Dashboard />} />
       <Route path="/main/ReportsAndAnalytics" element={<ReportsAndAnalyticsPage />} />
