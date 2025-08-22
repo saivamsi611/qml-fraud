@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import { Link } from "react-router-dom";
-import { Menu } from "lucide-react"; 
-import Globe from "../../components/Globe"; 
+import { Menu } from "lucide-react";
+import Globe from "../../components/Globe";
 import "./Dashboard.css";
 
 const riskData = [
@@ -10,13 +10,22 @@ const riskData = [
   { name: "Low Risk", value: 35 },
   { name: "Approved", value: 45 },
 ];
-const COLORS = ["#ef4444", "#facc15", "#22c55e"];
+
+const riskColors = ["#ef4444", "#facc15", "#22c55e"];
 
 const transactions = [
   { id: 1, user: "Lokesh", amount: "₹500", status: "approved" },
   { id: 2, user: "Rahul", amount: "₹750", status: "pending" },
   { id: 3, user: "Anjali", amount: "₹300", status: "critical" },
   { id: 4, user: "Kiran", amount: "₹1200", status: "approved" },
+];
+
+// Sample data for the new bar chart
+const growthData = [
+  { month: "Jan", growth: 30 },
+  { month: "Feb", growth: 45 },
+  { month: "Mar", growth: 60 },
+  { month: "Apr", growth: 35 },
 ];
 
 export default function Dashboard() {
@@ -28,14 +37,13 @@ export default function Dashboard() {
         <Globe />
       </div>
 
-      {/* Sidebar */}
       <aside className={`sidebar ${open ? "open" : ""}`}>
         <div className="menu-top">
           <ul>
             <li><Link to="/main">Home</Link></li>
             <li><Link to="/main/dashboard">Dashboard</Link></li>
             <hr />
-            <li><Link to="/main/ReportsAndAnalyticsPage">Reports & Analytics</Link></li>
+            <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
             <hr />
             <li><Link to="/main/settings">Settings</Link></li>
             <li><Link to="/main/help">Help</Link></li>
@@ -50,7 +58,6 @@ export default function Dashboard() {
         </div>
       </aside>
 
-      {/* Main content */}
       <div className={`dashboard-content ${open ? "sidebar-open" : ""}`}>
         <header className="header">
           <button className="hamburger" onClick={() => setOpen(!open)}>
@@ -60,7 +67,6 @@ export default function Dashboard() {
         </header>
 
         <div className="main-layout">
-          {/* Left Panel */}
           <div className="left-panel">
             <div className="stats-row">
               <div className="stat-box">
@@ -89,10 +95,7 @@ export default function Dashboard() {
                   dataKey="value"
                 >
                   {riskData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
+                    <Cell key={`cell-${index}`} fill={riskColors[index % riskColors.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -100,7 +103,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Right Panel */}
           <div className="right-panel">
             <h2>Recent Transactions</h2>
             <div className="table-wrapper">
@@ -123,11 +125,24 @@ export default function Dashboard() {
                 </tbody>
               </table>
             </div>
+
+            {/* New Growth Bar Chart */}
+            <div className="chart-box">
+              <h2>Monthly Growth</h2>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={growthData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" stroke="var(--text-primary)" />
+                  <YAxis stroke="var(--text-primary)" />
+                  <Tooltip />
+                  <Bar dataKey="growth" fill="var(--accent)" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Sidebar overlay for mobile */}
       {open && <div className="overlay" onClick={() => setOpen(false)} />}
     </div>
   );
