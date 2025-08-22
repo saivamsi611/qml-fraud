@@ -1,5 +1,5 @@
 import React from "react";
-import "./AnalyticsPage.css";
+import "./ReportsAndAnalyticsPage.css";
 
 const Analytics = () => {
   // Data placeholders (dummy values or null)

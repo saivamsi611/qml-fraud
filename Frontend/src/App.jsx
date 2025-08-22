@@ -6,7 +6,7 @@ import MainPage from "./pages/MainPage/MainPage";
 import SignupPage from "./pages/SingupPage/SingupPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import AnalyticsPage from "./pages/AnalyticsPage/AnalyticsPage";
+import ReportsAndAnalyticsPage from "./pages/ReportsAndAnalyticsPage/ReportsAndAnalyticsPage";
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
       <Route path="/Forgotpassword" element={<ForgotPassword />} />
       <Route path="/main" element={<MainPage/>} />
       <Route path="/main/dashboard" element={<Dashboard />} />
-      <Route path="/main/analytics" element={<AnalyticsPage />} />
+      <Route path="/main/ReportsAndAnalytics" element={<ReportsAndAnalyticsPage />} />
       {/* Add more routes as needed */}
     </Routes>
   );
