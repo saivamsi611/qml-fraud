@@ -6,11 +6,11 @@ import MainPage from "./pages/MainPage/MainPage";
 import SignupPage from "./pages/SingupPage/SingupPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Dashboard from "./pages/Dashboard/Dashboard";
-
 import About from "./pages/AboutPage/About";
 import ReportsAndAnalytics from "./pages/ReportsAndAnalyticsPage/ReportsAndAnalyticsPage";
 import Settings from './pages/Settings/Settings';
-import Helpus from './pages/HelpusPage/Helpus'; 
+import Helpus from './pages/HelpusPage/Helpus';
+import FormPage from "./pages/FormPage/FormPage";
 
 function App() {
   return (
@@ -20,11 +20,12 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/Forgotpassword" element={<ForgotPassword />} />
       <Route path="/About" element={<About />} />
-      <Route path="/main" element={<MainPage/>} />
+      <Route path="/main" element={<MainPage />} />
       <Route path="/main/dashboard" element={<Dashboard />} />
       <Route path="/main/ReportsAndAnalytics" element={<ReportsAndAnalytics />} />
       <Route path="/main/settings" element={<Settings />} />
       <Route path="/main/help" element={<Helpus />} />
+      <Route path="/main/form" element={<FormPage />} />
       {/* Add more routes as needed */}
     </Routes>
   );

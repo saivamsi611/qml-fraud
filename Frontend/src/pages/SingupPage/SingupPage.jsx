@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import './SingupPage.css';
+import Globe from "../../components/Globe"; // 🌍 background globe
 
 export default function SignupPage() {
   return (
     <div className="wrapper">
+      <Globe />
       <div className="console-panel">
         <h2>Sign up here</h2>
         <form>

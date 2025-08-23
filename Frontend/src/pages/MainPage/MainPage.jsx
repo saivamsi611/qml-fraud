@@ -4,10 +4,9 @@ import Globe from "../../components/Globe";
 import DonutChart from "../../components/ModelErrorDonutChart/MEDonutChart";
 import MPMarquee from "../../components/MPMarquee/MPMarquee";
 import { FaPlusCircle } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-
-export default function App() {
+export default function MainPage() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -32,22 +31,35 @@ export default function App() {
       <aside className={`sidebar ${open ? "open" : ""}`}>
         <div className="menu-top">
           <ul>
-              <li><Link to="/main">Home</Link></li>
-              <li><Link to="/main/dashboard">Dashboard</Link></li>
+            <li>
+              <Link to="/main">Home</Link>
+            </li>
+            <li>
+              <Link to="/main/dashboard">Dashboard</Link>
+            </li>
             <hr />
-              <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
+            <li>
+              <Link to="/main/reportsAndAnalytics">Reports & Analytics</Link>
+            </li>
             <hr />
-              <li><Link to="/main/settings">Settings</Link></li>
-              <li><Link to="/main/help">Help</Link></li>
+            <li>
+              <Link to="/main/settings">Settings</Link>
+            </li>
+            <li>
+              <Link to="/main/help">Help</Link>
+            </li>
             <hr />
-        </ul>
-
+          </ul>
         </div>
         <div className="menu-bottom">
           <hr />
           <ul>
-            <li><Link to="/About">About Us</Link></li>
-            <li><Link to='/'>Logout</Link></li>
+            <li>
+              <Link to="/About">About Us</Link>
+            </li>
+            <li>
+              <Link to="/">Logout</Link>
+            </li>
           </ul>
         </div>
       </aside>
@@ -56,36 +68,42 @@ export default function App() {
       <main className="content">
         <Globe />
 
-        <div class="flex-container">
-          <div class="outer-box">
-            <div class="inner-box">Status</div>
-            <div class="inner-box">Box 1B</div>
+        {/* Status section */}
+        <div className="flex-container">
+          <div className="outer-box">
+            <div className="inner-box">Status</div>
+            <div className="inner-box">Box 1B</div>
           </div>
-          <div class="outer-box"  style={{ borderLeft: "2px solid black" }}>
-            <div class="inner-box">Version</div>
-            <div class="inner-box">v0.3</div>
+          <div className="outer-box" style={{ borderLeft: "2px solid black" }}>
+            <div className="inner-box">Version</div>
+            <div className="inner-box">v0.3</div>
           </div>
-          <div class="outer-box" style={{ borderLeft: "2px solid black" }}>
-            <div class="inner-box">uptime</div>
-            <div class="inner-box">100%</div>
+          <div className="outer-box" style={{ borderLeft: "2px solid black" }}>
+            <div className="inner-box">Uptime</div>
+            <div className="inner-box">100%</div>
           </div>
         </div>
+
+        {/* Donut chart */}
         <aside className="right-space">
           <DonutChart accuracy={85} />
-         </aside>
+        </aside>
 
+        {/* Marquee */}
+        <MPMarquee
+          className="marquee"
+          width="600px"
+          items={[
+            "🚀 Fraud Detection Dashboard Ready",
+            "🔍 Analyzing Quantum ML Data",
+            "📊 Report Generated Successfully",
+            "⚡ Model Accuracy: 85%",
+          ]}
+        />
 
-
-         <MPMarquee className="marquee"
-        width="600px"   // you can also try "600px" or "100%"
-        items={[
-          "🚀 Fraud Detection Dashboard Ready",
-          "🔍 Analyzing Quantum ML Data",
-          "📊 Report Generated Successfully",
-          "⚡ Model Accuracy: 85%"
-        ]}
-      />
-      <div className="bottom-section">
+        {/* Bottom Section */}
+        <div className="bottom-section">
+          {/* Project Directory */}
           <div className="ProjectDirectory">
             <h2>Project Directory</h2>
             <hr />
@@ -95,16 +113,20 @@ export default function App() {
             <FaPlusCircle className="add-icon" />
           </div>
 
+          {/* Upload Section */}
           <div className="upload-container">
-            <button className="upload-btn">Upload a new CSV File</button>
+            {/* Link to FormPage */}
+            <Link to="/main/form">
+              <button className="upload-btn">Upload a new CSV File</button>
+            </Link>
+
             <div className="project-box">
               <button className="project-btn">Go To Project Section</button>
               <div className="empty-box"></div>
             </div>
           </div>
-      </div>
-
-    </main>
-  </div>
+        </div>
+      </main>
+    </div>
   );
 }
