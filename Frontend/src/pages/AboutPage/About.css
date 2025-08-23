@@ -91,6 +91,7 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 1rem;
+  color: white;
 }
 
 .hero-subtitle {
@@ -102,6 +103,12 @@
 .mission, .story, .team, .contact {
   padding: 3rem 1rem;
   text-align: center;
+}
+
+.mission h2, .story h2, .team h2, .contact h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: white;
 }
 
 .values-grid {
