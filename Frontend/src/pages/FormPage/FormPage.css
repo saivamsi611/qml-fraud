@@ -1,0 +1,121 @@
+/* Full page wrapper */
+.formpage-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Globe background fills entire page */
+.globe-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Form container centered above globe */
+.form-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  padding: 30px 25px;
+  background: rgba(255, 255, 255, 0.05); /* semi-transparent */
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  color: #cbd5e1;
+  z-index: 2; /* above globe */
+  transition: transform 0.3s, background 0.3s;
+}
+
+.form-container:hover {
+  transform: translate(-50%, -50%) translateY(-5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Heading */
+.form-container h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #00e0ff;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: bold;
+  color: #00e0ff;
+  text-align: left;
+}
+
+/* Inputs */
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  font-size: 1rem;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus {
+  border-color: #00e0ff;
+  box-shadow: 0 0 8px rgba(0, 224, 255, 0.6);
+}
+
+/* Drop zone */
+.drop-zone {
+  border: 2px dashed #00e0ff;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.drop-zone:hover,
+.drop-zone.active {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.file-name {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #00e0ff;
+  font-style: italic;
+}
+
+/* Submit Button */
+button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #00334d, #00e0ff);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #005577, #33f0ff);
+  transform: translateY(-2px);
+}

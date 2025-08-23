@@ -4,10 +4,9 @@ import Globe from "../../components/Globe";
 import DonutChart from "../../components/ModelErrorDonutChart/MEDonutChart";
 import MPMarquee from "../../components/MPMarquee/MPMarquee";
 import { FaPlusCircle } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-
-export default function App() {
+export default function MainPage() {
   const [open, setOpen] = useState(false);
   const items = [
     "Welcome to the Fraud Detection Dashboard! ",
@@ -41,22 +40,35 @@ export default function App() {
       <aside className={`sidebar ${open ? "open" : ""}`}>
         <div className="menu-top">
           <ul>
-              <li><Link to="/main">Home</Link></li>
-              <li><Link to="/main/dashboard">Dashboard</Link></li>
+            <li>
+              <Link to="/main">Home</Link>
+            </li>
+            <li>
+              <Link to="/main/dashboard">Dashboard</Link>
+            </li>
             <hr />
-              <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
+            <li>
+              <Link to="/main/reportsAndAnalytics">Reports & Analytics</Link>
+            </li>
             <hr />
-              <li><Link to="/main/settings">Settings</Link></li>
-              <li><Link to="/main/help">Help</Link></li>
+            <li>
+              <Link to="/main/settings">Settings</Link>
+            </li>
+            <li>
+              <Link to="/main/help">Help</Link>
+            </li>
             <hr />
-        </ul>
-
+          </ul>
         </div>
         <div className="menu-bottom">
           <hr />
           <ul>
-            <li><Link to="/About">About Us</Link></li>
-            <li><Link to='/'>Logout</Link></li>
+            <li>
+              <Link to="/About">About Us</Link>
+            </li>
+            <li>
+              <Link to="/">Logout</Link>
+            </li>
           </ul>
         </div>
       </aside>
@@ -103,7 +115,11 @@ export default function App() {
                 <div className="topdiv"></div>
                 <div className="bottomdiv">
                   <div className="CSVTitle">Upload a New Transactions File to Learn About the Transactions and their History</div>
-                  <div className="CSVUploadbutton">Upload a new CSV File</div>
+                  <div className="CSVUploadbutton">
+                    <Link to="/main/form">
+                     <button className="upload-btn">Upload a new CSV File</button>
+                    </Link>
+                  </div>
                   
                 </div>
               </div>

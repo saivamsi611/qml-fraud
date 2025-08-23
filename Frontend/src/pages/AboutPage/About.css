@@ -1,13 +1,11 @@
 .about-container {
   display: flex;
   font-family: 'Segoe UI', sans-serif;
-  color: white;
+  color: #e0e0e0; /* default light text */
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
 }
-
-
 
 .globe-bg {
   position: absolute;
@@ -16,6 +14,7 @@
   z-index: 0;
 }
 
+/* Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
@@ -40,13 +39,18 @@
 }
 
 .sidebar a {
-  color: white;
+  color: #e0e0e0; /* light links */
   text-decoration: none;
   display: block;
   padding: 0.5rem 0;
   font-weight: 500;
 }
 
+.sidebar a:hover {
+  color: #00e0ff; /* hover highlight */
+}
+
+/* Main content */
 .main-content {
   flex: 1;
   padding: 1rem 2rem;
@@ -59,6 +63,7 @@
   margin-left: 250px;
 }
 
+/* Header */
 .header {
   display: flex;
   align-items: center;
@@ -71,17 +76,26 @@
   z-index: 10;
 }
 
+/* Hamburger */
 .hamburger {
-  margin-left: 0; /* Remove extra spacing if present */
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #e0e0e0;
 }
 
+/* Header title */
 .header h1 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   margin: 0;
   padding: 0;
+  color: #ffffff;
+  text-align: center;
+  flex: 1;
 }
 
-
+/* Hero / About Section */
 .hero {
   text-align: center;
   padding: 4rem 1rem;
@@ -97,13 +111,16 @@
 .hero-subtitle {
   max-width: 600px;
   margin: 0 auto;
-  color: rgba(255,255,255,0.7);
+  color: #e0e0e0; /* light text */
 }
 
+/* Mission / Story / Team / Contact */
 .mission, .story, .team, .contact {
   padding: 3rem 1rem;
   text-align: center;
+  color: #e0e0e0; /* light text */
 }
+
 
 .mission h2, .story h2, .team h2, .contact h2 {
   font-size: 2rem;
@@ -124,8 +141,10 @@
   border-radius: 12px;
   padding: 1rem;
   font-size: 0.9rem;
+  color: #e0e0e0;
 }
 
+/* Story section */
 .story {
   padding: 3rem 2rem;
   text-align: center;
@@ -137,6 +156,7 @@
 .story h2 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
+  color: #ffffff;
 }
 
 .story ul {
@@ -152,7 +172,7 @@
   background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   border-left: 4px solid #06b6d4;
-  color: rgba(255, 255, 255, 0.85);
+  color: #e0e0e0;
   text-align: left;
   transition: background 0.3s ease;
 }
@@ -168,8 +188,7 @@
   font-weight: 600;
 }
 
-
-
+/* Team grid */
 .team-grid {
   display: flex;
   gap: 1rem;
@@ -183,6 +202,7 @@
   border-radius: 12px;
   padding: 1rem;
   width: 180px;
+  color: #e0e0e0;
 }
 
 .avatar {
@@ -198,10 +218,12 @@
   margin: 0 auto 1rem auto;
 }
 
+/* Footer */
 .footer {
   text-align: center;
   padding: 1rem;
   background: rgba(255,255,255,0.05);
   border-top: 1px solid rgba(255,255,255,0.1);
   margin-top: 2rem;
+  color: #e0e0e0;
 }

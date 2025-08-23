@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import './ForgotPassword.css'; // You can reuse the SignupPage.css or create separate styles
+import Globe from "../../components/Globe"; // 🌍 background globe
 
 export default function ForgotPasswordPage() {
   return (
     <div className="wrapper">
+      <Globe />
       <div className="console-panel">
         <h2>Forgot Password</h2>
         <form>

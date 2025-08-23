@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import Globe from "../../components/Globe"; // 🌍 background globe
 import './LoginPage.css';
 
 export default function Login() {
@@ -12,6 +13,7 @@ export default function Login() {
 
   return (
     <div className="login-wrapper">
+      <Globe />
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
