@@ -105,7 +105,7 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  color: #ffffff;
+  color: white;
 }
 
 .hero-subtitle {
@@ -121,7 +121,13 @@
   color: #e0e0e0; /* light text */
 }
 
-/* Values grid */
+
+.mission h2, .story h2, .team h2, .contact h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
 .values-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

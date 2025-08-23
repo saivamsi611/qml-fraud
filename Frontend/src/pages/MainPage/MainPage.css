@@ -15,14 +15,9 @@
   color: ivory;
 }
 
-/* .ProjectDirectory h2,
-.ProjectDirectory ul {
-  margin: 0; 
-  padding: 0;
-} */
 
 /* Top bar */
-/* Top bar */
+
 .topbar {
   width: 100%;
   height: 100px;
@@ -39,6 +34,12 @@
   z-index: 1;
 }
 
+.topbar h1 {
+  margin: 0;
+  padding: 0 1rem;
+  font-size: default;
+  color: white;
+}
 /* Hamburger button */
 .hamburger {
   transition: none;
@@ -115,12 +116,14 @@
 }
 
 /* Profile image */
+
 .profile-image {
-  width: 40px;
-  height: 40px;
+  width: auto !important;
+  height: 60px !important;
   border-radius: 50%;
   margin-right: 0.5rem; /* Space between image and name */
 }
+
 /* Profile name */
 .profile-name {
   color: white;
@@ -147,76 +150,124 @@
   padding: 1rem;
 }
 
-.flex-container {
-  display: flex;
-  gap: 0px; 
-  margin-left: 50px;  
-  /* padding: 20px; */
+/* Grid Box Layout */
+
+/* Keep container as is for top + middle sections */
+
+/* Container */
+.container {
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* top, middle, bottom */
+  grid-template-columns: 1fr ;    /* two columns for middle section */
+  grid-gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(2px);
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-.outer-box {
-  width: 150px;
+/* Bottom Section full container width */
+.bottom-section {
+  grid-column: 1 / -1;      /* span all columns */
+  height: 80px;
+  margin-left: 0px !important;
+}
+
+/* Keep all other styles the same */
+.top-section { 
+  height: 150px;
+  border-radius: 8px; 
+}
+
+.middle-section { 
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px; }
+
+.left-pane { 
+  height: 300px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  }
+
+.right-pane { display: grid; grid-template-rows: 1fr ; grid-gap: 20px; }
+
+.right-top { margin:50px; }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .middle-section { grid-template-columns: 1fr; }
+  .right-pane { grid-template-rows: auto auto; }
+}
+
+
+
+/* SVUFlexBox styles */  
+/* SVUFFlexBarContainer Styles */
+.SVUFFlexBarContainer {
   display: flex;
   justify-content: space-between;
+  align-items: stretch;
+  gap: 1rem;
+  margin: 20px 0;
   padding: 10px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(18px);  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  border-radius: 10px;
 }
 
-.inner-box {
-  width: 100px; 
-  gap: 10px;              /* space between inner boxes */
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(18px);  display: flex;
-  color: white;
-  text-align: center;
-  padding: 20px;
+/* Each individual section like Status, Version, Uptime */
+.SVU1,
+.SVU2,
+.SVU3 {
+  flex: 1;
+  background-color: transparent;
   border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border: 1px solid #aaa;
+
+}
+
+/* Inner boxes inside each SVU section */
+.inner-box {
+  padding: 8px 12px;
+  margin: 4px 0;
+  font-size:24px;
+  text-align: center;
+  font-weight: 500;
+  color: #eae6e6;
 }
 
 
-.right-space {
-  display: flex;
-}
-
-.donut-box{
+ .donut-box{
   scale: 1.0;
-  margin-left: auto;
-  margin-top: -50px;
-  padding-right: 120px;
-  padding-bottom: 50px;
 }
 
 .ProjectDirectory {
-  height: 300px;
+  padding: 10px;
+  position: absolute;
+  height: 100%;
   width: 300px;
   background: rgb(64, 62, 65)(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
-  padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   font-family: sans-serif;
-  position: relative;
+  display: block;
 }
 
 .ProjectDirectory h2 {
-  margin: 0 0 10px;
   font-size: 20px;
-  color: #333;
+  color: #f9f7f7;
   font-weight: bold;
   text-align: center;
-}
+} 
 
-/* .ProjectDirectory hr {
-  margin: 10px 0;
-  border: none;
-  border-top: 1px solid #ddd;
-} */
-
-.ProjectDirectory ul {
+ .ProjectDirectory ul {
   list-style: none;
   padding: 0;
   margin: 0 0 15px;
@@ -224,51 +275,60 @@
 
 .ProjectDirectory li {
   padding: 8px 0;
-  color: #555;
+  color: #fefbfb;
   font-size: 16px;
 }
 
 
-.add-icon {
+ .add-icon {
   position: absolute;
   bottom: 15px;
   right: 15px;
-  width: 30px;   /* force size */
+  width: 30px;   
   height: 30px;
-  color: #4ca3af;  /* green color */
+  color: #4ca3af;  
   cursor: pointer;
-}
+} 
 
 /* UploadSection.css */
-.upload-container {
-  height: max-content;
-  background: rgb(64, 62, 65)(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border: 1px solid #aaa;
-  border-radius: 6px;
-  padding: 20px;
-  width: 320px;
-  font-family: sans-serif;
-  color: white;
-  position: relative;
+
+.UContainer {
+  display: grid;
+  grid-template-rows: 30% 70%; /* Divides the container into two equal rows */
+  height: 300px; /* Set desired height */
+  gap: 10px;     /* Space between top and bottom sections */
 }
 
-.upload-btn {
-  width: 100%;
-  padding: 15px;
-  background: transparent;
+
+
+.bottomdiv {
+  background-color: transparent;
+  border-radius: 8px;
+  padding: 10px;
   border: 1px solid #aaa;
-  border-radius: 6px;
-  font-size: 18px;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+                   
+}
+
+
+.CSVTitle{
+  font-size: 20px;
+  color: #f9f7f7;
   font-weight: bold;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 20px;
-  background-color: rgba(0, 255, 255, 0.352);
-  transition: none;
+  text-align: center;
+  margin-top: 10px;
 }
 
-.upload-btn:hover {
+.CSVUploadbutton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.CSVUploadbutton:hover{
   background-color: rgba(0, 255, 255, 0.352) !important;
   color: white !important;
   border-color: #aaa !important;
@@ -277,32 +337,6 @@
   transition: none !important;
 }
 
-
-.project-box {
-  display: flex;
-  gap: 10px;
-}
-
-.project-btn {
-  flex: 1;
-  padding: 15px;
-  background: transparent;
-  border: 1px solid #aaa;
-  border-radius: 6px;
-  font-size: 16px;
-  color: white;
-  cursor: pointer;
-  text-align: center;
-}
-
-.project-btn:hover,.project-btn:active, .project-btn:focus {
-  background-color: transparent !important;
-  color: white !important;
-  border-color: #aaa !important;
-  box-shadow: none !important;
-  transform: none !important;
-  transition: none !important;
-}
 
 
 .empty-box {
@@ -313,27 +347,17 @@
 
 
 .bottom-section {
-  margin-left: 180px;
   display: flex;
   gap: 20px; /* space between ProjectDirectory & UploadContainer */
   margin-top: 20px;
 }
 
-.ProjectDirectory, 
-.upload-container {
-  margin-top: -200px; /* Adjust to overlap with topbar */
-  border: 1px solid #aaa;
-  border-radius: 6px;
-  padding: 15px;
-  color: white;
-}
-
-
 .scroll-container{
   position: absolute;
   padding: auto;
-  right: 100px;
-  bottom: 50px;
+  margin-left: -60px;
+  overflow-y: auto;
+  margin-top: 50px;
 }
 
 /* Shrink content when sidebar is open */
@@ -353,6 +377,11 @@
   transition: margin-left 0.3s ease;
 }
 
+.app.shrink .topbar h1 {
+  margin-left: -100px;
+  transition: margin-left 0.3s ease;
+}
+
 .app.shrink #profilecontainer{
   margin-right: 250px;
   transition: margin-right 0.3s ease;
@@ -367,3 +396,5 @@
   margin-right: -35px;
   transition: margin-right 0.3s ease;  
 }
+
+
