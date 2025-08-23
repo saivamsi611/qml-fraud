@@ -83,16 +83,16 @@ export default function MainPage() {
             
             <div class="SVUFFlexBarContainer">
               <div className="SVU1">
-                <div class="inner-box">Status</div>
-                <div class="inner-box">Box 1B</div>
+                <div className="inner-box">Status</div>
+                <div className="inner-box">Box 1B</div>
               </div>
               <div className="SVU2">
                 <div class="inner-box">Version</div>
                 <div class="inner-box">v0.3</div>
               </div>
               <div className="SVU3">
-                <div class="inner-box">Uptime</div>
-                <div class="inner-box">99.99%</div>
+                <div className="inner-box">Uptime</div>
+                <div className="inner-box">99.99%</div>
               </div>
             </div>
 

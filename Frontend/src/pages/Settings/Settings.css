@@ -1,15 +1,4 @@
 /* Background globe container */
-.globe-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
-  user-select: none;
-  background: radial-gradient(ellipse at center, #0d1117 0%, #000000 100%);
-}
 
 /* Main container with modern glass look */
 .settings-page {
@@ -24,6 +13,7 @@
   -webkit-backdrop-filter: blur(14px);
   color: #e4eaf0;
   font-family: "Inter", sans-serif;
+  z-index: 1;
 }
 
 .back-home {
@@ -72,14 +62,16 @@ h2 {
 }
 
 .profile-image {
-  width: 110px;
-  height: 110px;
+  width: 100px !important;
+  height: 100px !important;
   border-radius: 50%;
   border: 2px solid #0ea5e9;
   object-fit: cover;
   background-color: #1e293b;
   transition: box-shadow 0.3s ease;
 }
+
+
 
 .profile-image:hover {
   box-shadow: 0 0 12px rgba(14, 165, 233, 0.6);
