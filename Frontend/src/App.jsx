@@ -6,7 +6,6 @@ import MainPage from "./pages/MainPage/MainPage";
 import SignupPage from "./pages/SingupPage/SingupPage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Dashboard from "./pages/Dashboard/Dashboard";
-
 import About from "./pages/AboutPage/About";
 import ReportsAndAnalytics from "./pages/ReportsAndAnalyticsPage/ReportsAndAnalyticsPage";
 import Settings from './pages/Settings/Settings';
