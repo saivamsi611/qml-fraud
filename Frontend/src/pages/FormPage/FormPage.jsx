@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./FormPage.css";
 import Globe from "../../components/Globe";
 import { useNavigate } from "react-router-dom";
@@ -6,12 +6,19 @@ import axios from "axios";
 
 export default function FormPage() {
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     name: "",
     file: null,
   });
   const [dragActive, setDragActive] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Retrieve project name from localStorage on mount
+  useEffect(() => {
+    const currentProject = localStorage.getItem("currentProject") || "";
+    setFormData((prev) => ({ ...prev, name: currentProject }));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,10 +27,7 @@ export default function FormPage() {
 
   const handleFileChange = (file) => {
     if (file && file.type === "text/csv") {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        file: file, // Replaces previous file
-      }));
+      setFormData({ ...formData, file });
     } else {
       alert("Please upload a valid CSV file.");
     }
@@ -34,7 +38,7 @@ export default function FormPage() {
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFileChange(e.dataTransfer.files[0]); // Only processes the first file
+      handleFileChange(e.dataTransfer.files[0]);
     }
   };
 
@@ -60,10 +64,8 @@ export default function FormPage() {
 
       if (response.status === 200) {
         alert("CSV uploaded successfully!");
-        navigate("/main"); // automatic redirect
+        navigate("/main"); // redirect to main page
       }
-
-      console.log(response.data);
     } catch (error) {
       console.error("Error:", error);
       alert("Error connecting to backend.");
@@ -112,14 +114,14 @@ export default function FormPage() {
               setDragActive(false);
             }}
             onDrop={handleDrop}
-            onClick={() => document.getElementById("file-input").click()} // Click to open file picker
+            onClick={() => document.getElementById("file-input").click()}
           >
             <p>Drag & drop your CSV file here or click below</p>
             <input
               id="file-input"
               type="file"
               accept=".csv"
-              onChange={(e) => handleFileChange(e.target.files[0])} // Only first file
+              onChange={(e) => handleFileChange(e.target.files[0])}
               style={{ display: "none" }}
             />
           </div>
