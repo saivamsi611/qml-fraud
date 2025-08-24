@@ -18,12 +18,14 @@ export default function About() {
         <ul className="menu-top">
           <li><Link to="/main">Home</Link></li>
           <li><Link to="/main/dashboard">Dashboard</Link></li>
-          <li><Link to="/main/reports">Reports</Link></li>
-          <li><Link to="/main/analytics">Analytics</Link></li>
+          <hr/>
+          <li><Link to="/main/reportsAndAnalyticsPage">Reports & Analytics</Link></li>
+          <hr/>
           <li><Link to="/main/settings">Settings</Link></li>
           <li><Link to="/main/help">Help</Link></li>
         </ul>
         <ul className="menu-bottom">
+          <hr/>
           <li><Link to="/main/about">About Us</Link></li>
           <li><Link to="/main/logout">Logout</Link></li>
         </ul>

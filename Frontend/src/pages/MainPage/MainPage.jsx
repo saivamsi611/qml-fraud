@@ -8,6 +8,15 @@ import { Link } from "react-router-dom";
 
 export default function MainPage() {
   const [open, setOpen] = useState(false);
+  const items = [
+    "Welcome to the Fraud Detection Dashboard! ",
+    "Upload your transaction data to get started. ",
+    "Monitor real-time fraud detection metrics. ",
+    "Generate detailed reports and analytics. ",
+    "Customize your dashboard settings. ",
+    "Need help? Visit our support center. ",
+    "Stay secure with our advanced fraud detection algorithms. "
+  ];
 
   return (
     <div className={`app ${open ? "shrink" : ""}`}>
@@ -21,7 +30,7 @@ export default function MainPage() {
           <img
             src="https://www.w3schools.com/howto/img_avatar.png"
             alt="Profile"
-            className="profile-image"
+            className="profile-image" 
           />
           <span className="profile-name">John Doe</span>
         </div>
@@ -68,65 +77,68 @@ export default function MainPage() {
       <main className="content">
         <Globe />
 
-        {/* Status section */}
-        <div className="flex-container">
-          <div className="outer-box">
-            <div className="inner-box">Status</div>
-            <div className="inner-box">Box 1B</div>
-          </div>
-          <div className="outer-box" style={{ borderLeft: "2px solid black" }}>
-            <div className="inner-box">Version</div>
-            <div className="inner-box">v0.3</div>
-          </div>
-          <div className="outer-box" style={{ borderLeft: "2px solid black" }}>
-            <div className="inner-box">Uptime</div>
-            <div className="inner-box">100%</div>
-          </div>
-        </div>
 
-        {/* Donut chart */}
-        <aside className="right-space">
-          <DonutChart accuracy={85} />
-        </aside>
+        <div class="container">
+          <div class="top-section">
+            
+            <div class="SVUFFlexBarContainer">
+              <div className="SVU1">
+                <div className="inner-box">Status</div>
+                <div className="inner-box">Box 1B</div>
+              </div>
+              <div className="SVU2">
+                <div class="inner-box">Version</div>
+                <div class="inner-box">v0.3</div>
+              </div>
+              <div className="SVU3">
+                <div className="inner-box">Uptime</div>
+                <div className="inner-box">99.99%</div>
+              </div>
+            </div>
 
-        {/* Marquee */}
-        <MPMarquee
-          className="marquee"
-          width="600px"
-          items={[
-            "🚀 Fraud Detection Dashboard Ready",
-            "🔍 Analyzing Quantum ML Data",
-            "📊 Report Generated Successfully",
-            "⚡ Model Accuracy: 85%",
-          ]}
-        />
-
-        {/* Bottom Section */}
-        <div className="bottom-section">
-          {/* Project Directory */}
-          <div className="ProjectDirectory">
-            <h2>Project Directory</h2>
-            <hr />
-            <ul>
-              <li>None</li>
-            </ul>
-            <FaPlusCircle className="add-icon" />
           </div>
 
-          {/* Upload Section */}
-          <div className="upload-container">
-            {/* Link to FormPage */}
-            <Link to="/main/form">
-              <button className="upload-btn">Upload a new CSV File</button>
-            </Link>
+          <div class="middle-section">
 
-            <div className="project-box">
-              <button className="project-btn">Go To Project Section</button>
-              <div className="empty-box"></div>
+            <div class="left-pane">
+              <div className="ProjectDirectory">
+                <h2>Project Directory</h2>
+                <hr/>
+                <ul>
+                  <li>None</li>
+                </ul>
+                <FaPlusCircle className="add-icon" />
+              </div> 
+            </div>
+
+            <div className="UContainer">
+                <div className="topdiv"></div>
+                <div className="bottomdiv">
+                  <div className="CSVTitle">Upload a New Transactions File to Learn About the Transactions and their History</div>
+                  <div className="CSVUploadbutton">
+                    <Link to="/main/form">
+                     <button className="upload-btn">Upload a new CSV File</button>
+                    </Link>
+                  </div>
+                  
+                </div>
+              </div>
+            <div class="right-pane">
+              <div class="right-top">
+                <DonutChart  accuracy={90}/>
+              </div>
             </div>
           </div>
+
+         <div class="bottom-section">
+          <MPMarquee items={items}/>
+         </div>
+          
         </div>
-      </main>
-    </div>
+
+
+        
+    </main>
+  </div>
   );
 }
