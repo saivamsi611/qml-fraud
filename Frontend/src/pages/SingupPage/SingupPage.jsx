@@ -15,9 +15,17 @@ export default function SignupPage() {
 
           <label>Email</label>
           <input type="email" placeholder="email " required />
+           
+           <label>Phone</label>
+          <input type="Integer" placeholder="phone" required />
+
 
           <label>Password</label>
           <input type="password" placeholder="Authorization key" required />
+
+          <label> Retype Password</label>
+          <input type="password" placeholder="Authorization key" required />
+
 
           <div className="button-group">
             <button type="submit">Launch</button>
