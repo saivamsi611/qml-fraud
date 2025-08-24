@@ -52,8 +52,8 @@ export default function Dashboard() {
         </div>
         <div className="menu-bottom">
           <ul>
-            <li>About Us</li>
-            <li>Logout</li>
+            <li><Link to="/About">About Us</Link></li>
+            <li><Link to="/">Logout</Link></li>
           </ul>
         </div>
       </aside>
