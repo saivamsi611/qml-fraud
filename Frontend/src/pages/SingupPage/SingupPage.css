@@ -6,6 +6,7 @@
   align-items: center;
   font-family: 'Orbitron', sans-serif;
   background: transparent;
+  padding: 1rem;
 }
 
 /* Galactic panel */
@@ -45,6 +46,8 @@
 form {
   display: flex;
   flex-direction: column;
+  min-height: 70vh;
+  overflow-y: auto;
 }
 
 label {
@@ -118,4 +121,55 @@ button:hover {
 
 .form-link a:hover {
   text-decoration: underline;
+}
+/* Responsive design for various screen sizes */
+@media (max-width: 768px) {
+  .console-panel {
+    padding: 1.5rem 2rem;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .console-panel h2 {
+    font-size: 1.5rem;
+  }
+
+  button {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .form-container {
+    max-height: 60vh; /* Adjust for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .console-panel {
+    padding: 1rem 1.5rem;
+  }
+
+  input {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .console-panel {
+    width: 500px;
+  }
+
+  .form-container {
+    max-height: 65vh;
+  }
 }

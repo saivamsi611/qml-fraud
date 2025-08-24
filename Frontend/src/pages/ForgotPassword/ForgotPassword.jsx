@@ -14,12 +14,12 @@ export default function ForgotPasswordPage() {
           <input type="email" id="email" placeholder="Email address" required />
 
           <div className="button-group">
-            <button type="submit">Reset Password</button>
+            <button type="submit">Submit</button>
           </div>
         </form>
 
         <p className="form-link">
-          Remember your password? <Link to="/login">Login to deck</Link>
+          Remember your password? <Link to="/login">Login</Link>
         </p>
       </div>
     </div>
