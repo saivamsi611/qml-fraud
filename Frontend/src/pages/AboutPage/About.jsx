@@ -19,7 +19,7 @@ export default function About() {
           <li><Link to="/main">Home</Link></li>
           <li><Link to="/main/dashboard">Dashboard</Link></li>
           <hr/>
-          <li><Link to="/main/reportsAndAnalyticsPage">Reports & Analytics</Link></li>
+          <li><Link to="/main/ReportsAndAnalytics">Reports & Analytics</Link></li>
           <hr/>
           <li><Link to="/main/settings">Settings</Link></li>
           <li><Link to="/main/help">Help</Link></li>
