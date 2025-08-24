@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import "./FormPage.css";
 import Globe from "../../components/Globe";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function FormPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
     file: null,
   });
   const [dragActive, setDragActive] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,28 +44,46 @@ export default function FormPage() {
       alert("Please upload a CSV file.");
       return;
     }
-    const projectName = formData.name;
-    const fileName = formData.file.name;
-    const timestamp = new Date().toISOString();
-    const tupleData = [projectName, fileName, timestamp];
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("projectName", formData.name);
+    formDataToSend.append("fileName", formData.file.name);
+    formDataToSend.append("file", formData.file);
 
     try {
-      const response = await fetch("http://localhost:5000/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: tupleData }),
-      });
-      if (response.ok) alert("CSV metadata sent successfully!");
-      else alert("Failed to send data to backend.");
+      setLoading(true);
+
+      const response = await axios.post(
+        "http://localhost:5000/upload",
+        formDataToSend
+      );
+
+      if (response.status === 200) {
+        alert("CSV uploaded successfully!");
+        navigate("/main"); // automatic redirect
+      }
+
+      console.log(response.data);
     } catch (error) {
       console.error("Error:", error);
       alert("Error connecting to backend.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="formpage-wrapper">
       <Globe className="globe-background" />
+
+      {/* Loading overlay */}
+      {loading && (
+        <div className="loading-overlay">
+          <h2>Loading...</h2>
+        </div>
+      )}
+
+      {/* Form container */}
       <div className="form-container">
         <h2>Upload CSV Form</h2>
         <form onSubmit={handleSubmit}>
@@ -102,6 +123,7 @@ export default function FormPage() {
               style={{ display: "none" }}
             />
           </div>
+
           {formData.file && <p className="file-name">📂 {formData.file.name}</p>}
 
           <button type="submit">Submit</button>
