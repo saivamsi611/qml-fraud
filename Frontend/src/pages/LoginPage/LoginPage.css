@@ -10,11 +10,12 @@ body {
 
 /* Wrapper Centering */
 .login-wrapper {
-  height: 100vh;
+ min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  overflow-y: auto;
 }
 
 /* Login Card Styling */

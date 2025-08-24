@@ -17,7 +17,10 @@ export default function FormPage() {
 
   const handleFileChange = (file) => {
     if (file && file.type === "text/csv") {
-      setFormData({ ...formData, file });
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        file: file, // Replaces previous file
+      }));
     } else {
       alert("Please upload a valid CSV file.");
     }
@@ -28,7 +31,7 @@ export default function FormPage() {
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFileChange(e.dataTransfer.files[0]);
+      handleFileChange(e.dataTransfer.files[0]); // Only processes the first file
     }
   };
 
@@ -59,10 +62,7 @@ export default function FormPage() {
 
   return (
     <div className="formpage-wrapper">
-      {/* Globe in background */}
       <Globe className="globe-background" />
-
-      {/* Form centered */}
       <div className="form-container">
         <h2>Upload CSV Form</h2>
         <form onSubmit={handleSubmit}>
@@ -79,16 +79,27 @@ export default function FormPage() {
           <label>Upload CSV</label>
           <div
             className={`drop-zone ${dragActive ? "active" : ""}`}
-            onDragEnter={() => setDragActive(true)}
+            onDragEnter={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDragActive(true);
+            }}
             onDragOver={(e) => e.preventDefault()}
-            onDragLeave={() => setDragActive(false)}
+            onDragLeave={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDragActive(false);
+            }}
             onDrop={handleDrop}
+            onClick={() => document.getElementById("file-input").click()} // Click to open file picker
           >
             <p>Drag & drop your CSV file here or click below</p>
             <input
+              id="file-input"
               type="file"
               accept=".csv"
-              onChange={(e) => handleFileChange(e.target.files[0])}
+              onChange={(e) => handleFileChange(e.target.files[0])} // Only first file
+              style={{ display: "none" }}
             />
           </div>
           {formData.file && <p className="file-name">📂 {formData.file.name}</p>}

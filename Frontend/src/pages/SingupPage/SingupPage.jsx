@@ -28,13 +28,13 @@ export default function SignupPage() {
 
 
           <div className="button-group">
-            <button type="submit">Launch</button>
+            <button type="submit">Submit</button>
             <button type="reset">Reset</button>
           </div>
         </form>
 
         <p className="form-link">
-          Already registered? <Link to="/login">Login to deck</Link>
+          Already registered? <Link to="/login">Login</Link>
         </p>
       </div>
     </div>
