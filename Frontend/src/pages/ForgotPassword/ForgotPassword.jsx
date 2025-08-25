@@ -46,7 +46,7 @@ export default function ForgotPasswordPage() {
           />
 
           <div className="button-group">
-            <button type="submit">Reset Password</button>
+            <button type="submit">Submit</button>
           </div>
         </form>
 
@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
         {error && <p className="error-msg">{error}</p>}
 
         <p className="form-link">
-          Remember your password? <Link to="/login">Login to deck</Link>
+          Remember your password? <Link to="/login">Login</Link>
         </p>
       </div>
     </div>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { gsap } from "gsap"; // using GSAP for animation
 import axios from "axios"; 
 import Globe from "../../components/Globe";
 import LinearLoader from "../../components/LinearLoader"; 
@@ -12,12 +12,23 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const cardRef = useRef(null);
 
   useEffect(() => {
-    // Show loader for ~1.2s every time page opens
+    // Loader stays ~1.2s
     const timer = setTimeout(() => setIsLoading(false), 1200);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!isLoading && cardRef.current) {
+      gsap.fromTo(
+        cardRef.current,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+      );
+    }
+  }, [isLoading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +44,9 @@ export default function Login() {
         console.log("Login success:", response.data);
 
         // store token if backend provides
-        localStorage.setItem("token", response.data.token);
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+        }
 
         // redirect after login
         navigate("/home");
@@ -54,12 +67,7 @@ export default function Login() {
       {!isLoading && (
         <div className="login-wrapper">
           <Globe />
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="login-card"
-          >
+          <div ref={cardRef} className="login-card">
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
               <label>Email</label>
@@ -91,7 +99,7 @@ export default function Login() {
             <div className="login-link">
               <Link to="/ForgotPassword">Forgot Password?</Link>
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
     </>

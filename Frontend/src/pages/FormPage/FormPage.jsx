@@ -1,9 +1,12 @@
 import React, { useState, useRef } from "react";
 import "./FormPage.css";
 import Globe from "../../components/Globe";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function FormPage() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({ name: "", file: null });
   const [dragActive, setDragActive] = useState(false);
 
@@ -42,6 +45,7 @@ export default function FormPage() {
     e.preventDefault();
     setDragActive(true);
   };
+
   const handleDragLeave = (e) => {
     e.preventDefault();
     setDragActive(false);
@@ -55,7 +59,8 @@ export default function FormPage() {
     }
 
     const formDataToSend = new FormData();
-    formDataToSend.append("projectname", formData.name);
+    formDataToSend.append("projectName", formData.name);
+    formDataToSend.append("fileName", formData.file.name);
     formDataToSend.append("file", formData.file);
 
     setUploading(true);
@@ -65,7 +70,7 @@ export default function FormPage() {
     cancelTokenSource.current = axios.CancelToken.source();
 
     try {
-      await axios.post("http://127.0.0.1:5000/upload_csv", formDataToSend, {
+      const response = await axios.post("http://127.0.0.1:5000/upload_csv", formDataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
         cancelToken: cancelTokenSource.current.token,
         onUploadProgress: (progressEvent) => {
@@ -83,7 +88,10 @@ export default function FormPage() {
       });
 
       setUploading(false);
-      alert("✅ CSV uploaded successfully!");
+      if (response.status === 200) {
+        alert("✅ CSV uploaded successfully!");
+        navigate("/main"); // redirect on success
+      }
     } catch (error) {
       setUploading(false);
       if (axios.isCancel(error)) {
@@ -125,22 +133,19 @@ export default function FormPage() {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onClick={() => document.getElementById("file-input").click()}
           >
             <p>Drag & drop your CSV file here or click below</p>
-            <label className="file-label">
-              <input
-                type="file"
-                accept=".csv"
-                style={{ display: "none" }}
-                onChange={(e) => handleFileChange(e.target.files[0])}
-              />
-              <span className="upload-btn">Click to select CSV</span>
-            </label>
+            <input
+              id="file-input"
+              type="file"
+              accept=".csv"
+              style={{ display: "none" }}
+              onChange={(e) => handleFileChange(e.target.files[0])}
+            />
           </div>
 
-          {formData.file && (
-            <p className="file-name">📂 {formData.file.name}</p>
-          )}
+          {formData.file && <p className="file-name">📂 {formData.file.name}</p>}
 
           <button type="submit">Submit</button>
         </form>

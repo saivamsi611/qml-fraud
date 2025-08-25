@@ -9,6 +9,7 @@ export default function SignupPage() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
+    phone: "",
     password: "",
   });
 
@@ -21,7 +22,7 @@ export default function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/signup", formData); 
+      const response = await axios.post("http://localhost:5000/api/signup", formData);
       // 🔹 Change URL to your backend endpoint
       alert(response.data.message || "Signup successful!");
     } catch (error) {
@@ -56,6 +57,16 @@ export default function SignupPage() {
             required
           />
 
+          <label>Phone</label>
+          <input
+            type="text"
+            name="phone"
+            placeholder="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+          />
+
           <label>Password</label>
           <input
             type="password"
@@ -66,14 +77,17 @@ export default function SignupPage() {
             required
           />
 
+          <label>Retype Password</label>
+          <input type="password" placeholder="Authorization key" required />
+
           <div className="button-group">
-            <button type="submit">Launch</button>
+            <button type="submit">Submit</button>
             <button type="reset">Reset</button>
           </div>
         </form>
 
         <p className="form-link">
-          Already registered? <Link to="/login">Login to deck</Link>
+          Already registered? <Link to="/login">Login</Link>
         </p>
       </div>
     </div>
