@@ -1,18 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Settings.css";
 import Globe from "../../components/Globe";
-
-// ✅ Import default profile image from local assets
 import defaultProfileImg from "../../../Static/profilepic.webp";
 
 export default function Settings() {
   const mountRef = useRef(null);
   const navigate = useNavigate();
 
-  // User state including profile image
   const [user, setUser] = useState({
     name: "John Doe",
     email: "john@example.com",
@@ -24,40 +21,89 @@ export default function Settings() {
 
   const [previewImg, setPreviewImg] = useState(null);
 
-  // Handle input change for text/password fields
+  // ✅ Processing dialog state
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  // Handle profile image upload and preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setUser({ ...user, profileImg: file });
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImg(reader.result);
-      };
+      reader.onloadend = () => setPreviewImg(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
-  // Profile update form submit
-  const handleProfileUpdate = (e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
-    alert("Profile updated successfully!");
-    // TODO: Upload profileImg and update backend
+    setIsProcessing(true); // show dialog
+    try {
+      const formData = new FormData();
+      formData.append("name", user.name);
+      formData.append("email", user.email);
+      if (user.profileImg) formData.append("profileImg", user.profileImg);
+
+      const res = await axios.put(
+        "http://localhost:5000/api/user/update",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      alert(res.data.message || "Profile updated successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Error updating profile!");
+    } finally {
+      setIsProcessing(false); // hide dialog
+    }
   };
 
-  // Password change form submit
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (user.newPassword !== user.confirmPassword) {
       alert("New passwords do not match.");
       return;
     }
-    alert("Password updated successfully!");
-    // TODO: call backend API
+
+    setIsProcessing(true);
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/user/change-password",
+        {
+          email: user.email,
+          currentPassword: user.password,
+          newPassword: user.newPassword,
+        }
+      );
+      alert(res.data.message || "Password updated successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Error updating password!");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your account?")) return;
+
+    setIsProcessing(true);
+    try {
+      const res = await axios.delete("http://localhost:5000/api/user/delete", {
+        data: { email: user.email },
+      });
+      alert(res.data.message || "Account deleted successfully!");
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting account!");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -65,6 +111,16 @@ export default function Settings() {
       <div ref={mountRef} className="globe-background">
         <Globe />
       </div>
+
+      {/* ✅ Processing Dialog */}
+      {isProcessing && (
+        <div className="processing-dialog">
+          <div className="processing-content">
+            <p>⏳ Processing...</p>
+          </div>
+        </div>
+      )}
+
       <main className="settings-page glassmorphism">
         <button className="btn back-home" onClick={() => navigate("/main")}>
           ← Back to Home
@@ -72,12 +128,13 @@ export default function Settings() {
 
         <h1>Settings</h1>
 
+        {/* Profile Section */}
         <section className="settings-section profile-section">
           <h2>Profile Information</h2>
           <form onSubmit={handleProfileUpdate}>
             <div className="profile-image-wrapper">
               <img
-                src={previewImg || defaultProfileImg} // ✅ Using local image as fallback
+                src={previewImg || defaultProfileImg}
                 className="profile-image"
                 alt="Profile"
                 height={150}
@@ -94,85 +151,42 @@ export default function Settings() {
                 style={{ display: "none" }}
               />
             </div>
-
             <div className="form-group">
               <label>Name:</label>
-              <input
-                type="text"
-                name="name"
-                value={user.name}
-                onChange={handleChange}
-                required
-              />
+              <input type="text" name="name" value={user.name} onChange={handleChange} required />
             </div>
-
             <div className="form-group">
               <label>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={user.email}
-                onChange={handleChange}
-                required
-              />
+              <input type="email" name="email" value={user.email} onChange={handleChange} required />
             </div>
-
-            <button type="submit" className="btn">
-              Update Profile
-            </button>
+            <button type="submit" className="btn">Update Profile</button>
           </form>
         </section>
 
+        {/* Password Section */}
         <section className="settings-section">
           <h2>Change Password</h2>
           <form onSubmit={handlePasswordChange}>
             <div className="form-group">
               <label>Current Password:</label>
-              <input
-                type="password"
-                name="password"
-                value={user.password}
-                onChange={handleChange}
-                required
-              />
+              <input type="password" name="password" value={user.password} onChange={handleChange} required />
             </div>
-
             <div className="form-group">
               <label>New Password:</label>
-              <input
-                type="password"
-                name="newPassword"
-                value={user.newPassword}
-                onChange={handleChange}
-                required
-              />
+              <input type="password" name="newPassword" value={user.newPassword} onChange={handleChange} required />
             </div>
-
             <div className="form-group">
               <label>Confirm New Password:</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={user.confirmPassword}
-                onChange={handleChange}
-                required
-              />
+              <input type="password" name="confirmPassword" value={user.confirmPassword} onChange={handleChange} required />
             </div>
-
-            <button type="submit" className="btn">
-              Change Password
-            </button>
+            <button type="submit" className="btn">Change Password</button>
           </form>
         </section>
 
+        {/* Danger Zone */}
         <section className="settings-section danger-zone">
           <h2>Danger Zone</h2>
-          <button
-            className="btn danger"
-            onClick={() => alert("Account deletion requested!")}
-          >
-            Delete Account
-          </button>
+          <button className="btn danger" onClick={handleDeleteAccount}>Delete Account</button>
         </section>
       </main>
     </>
