@@ -70,7 +70,7 @@ export default function Login() {
           <Globe />
           <div ref={cardRef} className="login-card">
             <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
+            <form id="LoginFormContainer" onSubmit={handleSubmit}>
               <label>Email</label>
               <input
                 type="email"

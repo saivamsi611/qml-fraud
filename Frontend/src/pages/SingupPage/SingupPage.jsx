@@ -57,7 +57,7 @@ export default function SignupPage() {
       <Globe />
       <div className="console-panel">
         <h2>Sign up here</h2>
-        <form onSubmit={handleSubmit}>
+        <form id="SignUpForm" onSubmit={handleSubmit}>
           <label>Username</label>
           <input
             type="text"
