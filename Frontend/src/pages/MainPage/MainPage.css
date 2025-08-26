@@ -5,18 +5,19 @@
   font-family: sans-serif;
 }
 
-* {
+
+*{
   text-decoration: none;
 }
 
-*:visited,
-a:active,
-a:hover {
+*:visited , a:active, a:hover {
   text-decoration: none;
   color: ivory;
 }
 
+
 /* Top bar */
+
 .topbar {
   width: 100%;
   height: 100px;
@@ -24,59 +25,66 @@ a:hover {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(64, 62, 65, 0.9);
+  background: rgb(64, 62, 65)(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  z-index: 1000;
+  justify-content: flex-start;  
+  z-index: 1;
 }
 
 .topbar h1 {
   margin: 0;
   padding: 0 1rem;
-  font-size: 20px;
+  font-size: default;
   color: white;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-
 /* Hamburger button */
 .hamburger {
+  transition: none;
+  background: none;
+  background-color: none;
+  width: auto;
+  font-size: 24px;
   background: none;
   border: none;
-  font-size: 28px;
   color: white;
   cursor: pointer;
   margin-right: 1rem;
-}
+  background: none;
+  color: none;
+  transition: none;
+  box-shadow: none;
+  }
 
 .hamburger:hover {
-  color: #ddd;
+  background: none;
+  color: none;
+  transition: none;
+  box-shadow: none;
 }
 
 /* Sidebar */
 .sidebar {
   position: fixed;
-  top: 100px; /* below topbar */
-  left: -180px; /* hidden by default */
+  top: 50px;                  /* below topbar */
+  left: -280px;               /* hidden by default */
   width: 180px;
-  height: calc(100% - 100px);
-  display: flex;
-  flex-direction: column;
+  height: calc(100% - 50px);  /* fill screen BELOW topbar */
+  display: flex;              /* enable flex */
+  flex-direction: column;     /* vertical layout */
 
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
 
   color: white;
   padding: 1rem;
   transition: left 0.3s ease;
-  box-sizing: border-box;
-  overflow-y: auto;
-  z-index: 1100;
+  box-sizing: border-box;     /* include padding in height */
+  overflow-y: auto;           /* scroll if menu too long */
 }
 
 .sidebar.open {
@@ -84,7 +92,7 @@ a:hover {
 }
 
 .menu-bottom {
-  margin-top: auto;
+  margin-top: auto; /* pushes About Us + Logout to bottom */
 }
 
 .sidebar ul {
@@ -99,28 +107,39 @@ a:hover {
 
 /* Profile container */
 #profilecontainer {
+  width: auto;
+  margin-left: auto;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-left: auto;
-  margin-right: 20px;
-  height: 50px;
+  margin-left: auto; /* Align to the right */
+  margin-right: 1rem; /* Add some space from the right edge */
 }
+
+/* Profile image */
 
 .profile-image {
-  width: 40px !important;
-  height: 40px !important;
+  width: auto !important;
+  height: 60px !important;
   border-radius: 50%;
-  object-fit: cover;
+  margin-right: 0.5rem; /* Space between image and name */
 }
 
+/* Profile name */
 .profile-name {
   color: white;
   font-size: 16px;
-  font-weight: 500;
-  white-space: nowrap;
 }
+
+.menu-top ul,
+.menu-bottom ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.menu-bottom {
+  margin-top: auto; /* pushes it to the bottom */
+}
+
 
 /* Content */
 .content {
@@ -131,11 +150,15 @@ a:hover {
   padding: 1rem;
 }
 
+/* Grid Box Layout */
+
+/* Keep container as is for top + middle sections */
+
 /* Container */
 .container {
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto; /* top, middle, bottom */
+  grid-template-columns: 1fr ;    /* two columns for middle section */
   grid-gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -146,43 +169,46 @@ a:hover {
   box-sizing: border-box;
 }
 
+/* Bottom Section full container width */
 .bottom-section {
-  grid-column: 1 / -1;
+  grid-column: 1 / -1;      /* span all columns */
   height: 80px;
   margin-left: 0px !important;
 }
 
-/* Sections */
-.top-section {
+/* Keep all other styles the same */
+.top-section { 
   height: 150px;
-  border-radius: 8px;
+  border-radius: 8px; 
 }
 
-.middle-section {
+.middle-section { 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 20px;
-}
+  grid-gap: 20px; }
 
-.left-pane {
+.left-pane { 
   height: 300px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   position: relative;
+  }
+
+.right-pane { display: grid; grid-template-rows: 1fr ; grid-gap: 20px; }
+
+.right-top { margin:50px; }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .middle-section { grid-template-columns: 1fr; }
+  .right-pane { grid-template-rows: auto auto; }
 }
 
-.right-pane {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-gap: 20px;
-}
 
-.right-top {
-  margin: 50px;
-}
 
-/* SVU Flex Box */
+/* SVUFlexBox styles */  
+/* SVUFFlexBarContainer Styles */
 .SVUFFlexBarContainer {
   display: flex;
   justify-content: space-between;
@@ -193,6 +219,7 @@ a:hover {
   border-radius: 10px;
 }
 
+/* Each individual section like Status, Version, Uptime */
 .SVU1,
 .SVU2,
 .SVU3 {
@@ -201,29 +228,31 @@ a:hover {
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  border: 1px solid #aaa;
+    border: 1px solid #aaa;
+
 }
 
+/* Inner boxes inside each SVU section */
 .inner-box {
   padding: 8px 12px;
   margin: 4px 0;
-  font-size: 24px;
+  font-size:24px;
   text-align: center;
   font-weight: 500;
   color: #eae6e6;
 }
 
-.donut-box {
+
+ .donut-box{
   scale: 1.0;
 }
 
-/* Project Directory */
 .ProjectDirectory {
   padding: 10px;
   position: absolute;
   height: 100%;
   width: 300px;
-  background: rgba(64, 62, 65, 0.9);
+  background: rgb(64, 62, 65)(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -236,9 +265,9 @@ a:hover {
   color: #f9f7f7;
   font-weight: bold;
   text-align: center;
-}
+} 
 
-.ProjectDirectory ul {
+ .ProjectDirectory ul {
   list-style: none;
   padding: 0;
   margin: 0 0 15px;
@@ -250,23 +279,27 @@ a:hover {
   font-size: 16px;
 }
 
-.add-icon {
+
+ .add-icon {
   position: absolute;
   bottom: 15px;
   right: 15px;
-  width: 30px;
+  width: 30px;   
   height: 30px;
-  color: #4ca3af;
+  color: #4ca3af;  
   cursor: pointer;
-}
+} 
 
-/* Upload Section */
+/* UploadSection.css */
+
 .UContainer {
   display: grid;
-  grid-template-rows: 30% 70%;
-  height: 300px;
-  gap: 10px;
+  grid-template-rows: 30% 70%; /* Divides the container into two equal rows */
+  height: 300px; /* Set desired height */
+  gap: 10px;     /* Space between top and bottom sections */
 }
+
+
 
 .bottomdiv {
   background-color: transparent;
@@ -276,9 +309,11 @@ a:hover {
   display: grid;
   grid-template-rows: 1fr 1fr;
   gap: 10px;
+                   
 }
 
-.CSVTitle {
+
+.CSVTitle{
   font-size: 20px;
   color: #f9f7f7;
   font-weight: bold;
@@ -286,14 +321,14 @@ a:hover {
   margin-top: 10px;
 }
 
-.CSVUploadbutton {
+.CSVUploadbutton{
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
 
-.CSVUploadbutton:hover {
+.CSVUploadbutton:hover{
   background-color: rgba(0, 255, 255, 0.352) !important;
   color: white !important;
   border-color: #aaa !important;
@@ -302,20 +337,24 @@ a:hover {
   transition: none !important;
 }
 
+
+
 .empty-box {
   width: 80px;
   border: 1px solid #aaa;
   border-radius: 6px;
 }
 
+
 .bottom-section {
   display: flex;
-  gap: 20px;
+  gap: 20px; /* space between ProjectDirectory & UploadContainer */
   margin-top: 20px;
 }
 
-.scroll-container {
+.scroll-container{
   position: absolute;
+  padding: auto;
   margin-left: -60px;
   overflow-y: auto;
   margin-top: 50px;
@@ -327,10 +366,12 @@ a:hover {
   transition: margin-left 0.3s ease;
 }
 
+/* Keep sidebar fixed width in sync */
 .sidebar {
   width: 180px;
 }
 
+/* Move topbar along with the content when sidebar is open */
 .app.shrink .topbar {
   margin-left: 250px;
   transition: margin-left 0.3s ease;
@@ -341,7 +382,7 @@ a:hover {
   transition: margin-left 0.3s ease;
 }
 
-.app.shrink #profilecontainer {
+.app.shrink #profilecontainer{
   margin-right: 250px;
   transition: margin-right 0.3s ease;
 }
@@ -351,67 +392,7 @@ a:hover {
   transition: margin-right 0.3s ease;
 }
 
-.app.shrink .scroll-container {
+.app.shrink .scroll-container{
   margin-right: -35px;
-  transition: margin-right 0.3s ease;
-}
-
-/* ------------------- Responsive Mobile Fixes ------------------- */
-@media (max-width: 768px) {
-  /* Topbar */
-  .topbar {
-    height: 70px;
-    padding: 0 10px;
-  }
-  .topbar h1 {
-    font-size: 16px;
-    max-width: 60%;
-  }
-  .profile-name {
-    display: none;
-  }
-  .profile-image {
-    width: 32px !important;
-    height: 32px !important;
-  }
-
-  /* Sidebar overlay */
-  .sidebar {
-    width: 70%;
-    max-width: 220px;
-    left: -100%;
-    top: 70px;
-  }
-  .sidebar.open {
-    left: 0;
-  }
-
-  /* App content full width */
-  .app,
-  .app.shrink {
-    margin-left: 0 !important;
-  }
-
-  /* Grid stack */
-  .middle-section {
-    grid-template-columns: 1fr;
-  }
-  .right-pane {
-    grid-template-rows: auto auto;
-  }
-
-  /* Project Directory full width */
-  .ProjectDirectory {
-    position: relative;
-    width: 100%;
-    height: auto;
-  }
-
-  .UContainer {
-    width: 100%;
-  }
-
-  .bottom-section {
-    flex-direction: column;
-  }
+  transition: margin-right 0.3s ease;  
 }

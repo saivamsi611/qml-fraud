@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./FormPage.css";
 import Globe from "../../components/Globe";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,12 @@ export default function FormPage() {
   const [timeRemaining, setTimeRemaining] = useState("Calculating...");
   const [uploadStartTime, setUploadStartTime] = useState(null);
   const cancelTokenSource = useRef(null);
+
+  // Retrieve project name from localStorage on mount
+  useEffect(() => {
+    const currentProject = localStorage.getItem("currentProject") || "";
+    setFormData((prev) => ({ ...prev, name: currentProject }));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

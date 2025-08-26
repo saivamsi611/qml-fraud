@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { gsap } from "gsap"; // using GSAP for animation
-import axios from "axios"; 
+import { gsap } from "gsap";
+import axios from "axios";
 import Globe from "../../components/Globe";
-import LinearLoader from "../../components/LinearLoader"; 
+import LinearLoader from "../../components/LinearLoader";
 import "./LoginPage.css";
 
 export default function Login() {
@@ -14,6 +14,7 @@ export default function Login() {
   const navigate = useNavigate();
   const cardRef = useRef(null);
 
+  // Animate card on mount
   useEffect(() => {
     // Loader stays ~1.2s
     const timer = setTimeout(() => setIsLoading(false), 1200);

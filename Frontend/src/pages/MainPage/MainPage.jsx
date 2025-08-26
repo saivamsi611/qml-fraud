@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./MainPage.css";
 import Globe from "../../components/Globe";
 import DonutChart from "../../components/ModelErrorDonutChart/MEDonutChart";
 import MPMarquee from "../../components/MPMarquee/MPMarquee";
 import { FaPlusCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";   // ✅ axios for backend calls
+import axios from "axios";
 
 export default function MainPage() {
   const [open, setOpen] = useState(false);
-  const [projects, setProjects] = useState([]);        // 🔹 projects from server
+  const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
+  const sidebarRef = useRef(null);
   const navigate = useNavigate();
 
   const items = [
@@ -23,45 +24,83 @@ export default function MainPage() {
     "Stay secure with our advanced fraud detection algorithms. "
   ];
 
-  // 🔹 Fetch project list from backend API
+  // Fetch projects from backend
   useEffect(() => {
-    async function fetchProjects() {
+    const fetchProjects = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/projects"); // ✅ backend call
-        setProjects(res.data);   // expect backend returns [{id, name}, ...]
+        const res = await axios.get("http://localhost:5000/api/projects");
+        setProjects(res.data || []);
       } catch (err) {
         console.error("Error fetching projects:", err);
       }
-    }
+    };
     fetchProjects();
   }, []);
 
-  // 🔹 Handle project selection
+  // Handle clicks outside sidebar to close it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        open &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        !event.target.closest(".hamburger")
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [open]);
+
+  // Add new project
+  const handleAddProject = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/projects", {
+        name: "Untitled Project"
+      });
+      if (response.status === 201) {
+        const newProject = response.data.project;
+        setProjects((prev) => [...prev, newProject]);
+      }
+    } catch (err) {
+      console.error("Error creating project:", err);
+      alert("Failed to create new project");
+    }
+  };
+
+  // Handle project selection
   const handleProjectClick = (project) => {
     setSelectedProject(project);
-    navigate(`/main/reportsAndAnalytics/${project.id}`); // redirect to analytics
+    navigate("/main/form");
   };
 
   return (
     <div className={`app ${open ? "shrink" : ""}`}>
-      {/* Top bar with hamburger */}
+      {/* Top bar */}
       <header className="topbar">
         <button className="hamburger" onClick={() => setOpen(!open)}>
           ☰
         </button>
         <h1>Fraud Detection Using QML Dashboard</h1>
         <div id="profilecontainer">
-          <span className="profile-name">John Doe</span>
           <img
             src="https://www.w3schools.com/howto/img_avatar.png"
             alt="Profile"
             className="profile-image"
           />
+          <span className="profile-name">John Doe</span>
         </div>
       </header>
 
       {/* Sidebar */}
-      <aside className={`sidebar ${open ? "open" : ""}`}>
+      <aside className={`sidebar ${open ? "open" : ""}`} ref={sidebarRef}>
         <div className="menu-top">
           <ul>
             <li><Link to="/main">Home</Link></li>
@@ -106,7 +145,7 @@ export default function MainPage() {
           </div>
 
           <div className="middle-section">
-            {/* 🔹 Project Directory */}
+            {/* Left Pane - Project Directory */}
             <div className="left-pane">
               <div className="ProjectDirectory">
                 <h2>Project Directory</h2>
@@ -126,7 +165,11 @@ export default function MainPage() {
                     ))
                   )}
                 </ul>
-                <FaPlusCircle className="add-icon" title="Add New Project" />
+                <FaPlusCircle
+                  className="add-icon"
+                  title="Add New Project"
+                  onClick={handleAddProject}
+                />
               </div>
             </div>
 
@@ -146,7 +189,7 @@ export default function MainPage() {
               </div>
             </div>
 
-            {/* Donut Chart */}
+            {/* Right Pane - Donut Chart */}
             <div className="right-pane">
               <div className="right-top">
                 <DonutChart accuracy={90} />
@@ -154,6 +197,7 @@ export default function MainPage() {
             </div>
           </div>
 
+          {/* Bottom Section - Marquee */}
           <div className="bottom-section">
             <MPMarquee items={items} />
           </div>

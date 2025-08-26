@@ -59,7 +59,6 @@ const AnalyticsContent = ({ open, setOpen, selectedProject }) => {
         <button className="hamburger" onClick={() => setOpen(!open)}>
           <Menu size={24} />
         </button>
-
         <h1>Analytics</h1>
       </header>
 
@@ -69,7 +68,7 @@ const AnalyticsContent = ({ open, setOpen, selectedProject }) => {
             <h3>Analytics Overview</h3>
             <div className="charts-grid">
               <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={250}>
                   <RadarChart data={radarData}>
                     <PolarGrid />
                     <PolarAngleAxis dataKey="subject" />
@@ -85,8 +84,9 @@ const AnalyticsContent = ({ open, setOpen, selectedProject }) => {
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
+
               <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={250}>
                   <LineChart data={lineData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
@@ -96,8 +96,9 @@ const AnalyticsContent = ({ open, setOpen, selectedProject }) => {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
+
               <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={barData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
@@ -117,7 +118,7 @@ const AnalyticsContent = ({ open, setOpen, selectedProject }) => {
             {selectedProject ? (
               <p>{selectedProject.summary}</p>
             ) : (
-              <p>No data available. (Project input removed)</p>
+              <p>No data available. Drop a project file to see analytics.</p>
             )}
           </div>
         </div>
@@ -131,7 +132,6 @@ export default function Analytics() {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
 
-  // ✅ Fetch projects from backend
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/projects") // replace with your backend API

@@ -1,33 +1,54 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios"; // ✅ Import axios
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./SingupPage.css";
 import Globe from "../../components/Globe"; // 🌍 background globe
 
 export default function SignupPage() {
-  // ✅ State for form fields
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     phone: "",
     password: "",
+    confirmPassword: "",
   });
 
-  // ✅ Handle input changes
+  // Handle input changes
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  // ✅ Handle form submit
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
     try {
-      const response = await axios.post("http://localhost:5000/api/signup", formData);
-      // 🔹 Change URL to your backend endpoint
-      alert(response.data.message || "Signup successful!");
+      const response = await axios.post("http://localhost:5000/signup", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response.status === 200) {
+        alert("Signup successful! Please login.");
+        navigate("/login"); // Redirect to login page
+      }
     } catch (error) {
-      console.error("Signup error:", error);
-      alert(error.response?.data?.message || "Signup failed, try again.");
+      console.error("Signup failed:", error);
+      alert("Error during signup. Try again.");
     }
   };
 
@@ -41,7 +62,7 @@ export default function SignupPage() {
           <input
             type="text"
             name="username"
-            placeholder="username "
+            placeholder="username"
             value={formData.username}
             onChange={handleChange}
             required
@@ -51,7 +72,7 @@ export default function SignupPage() {
           <input
             type="email"
             name="email"
-            placeholder="email "
+            placeholder="email"
             value={formData.email}
             onChange={handleChange}
             required
@@ -71,14 +92,21 @@ export default function SignupPage() {
           <input
             type="password"
             name="password"
-            placeholder="Authorization key"
+            placeholder="password"
             value={formData.password}
             onChange={handleChange}
             required
           />
 
           <label>Retype Password</label>
-          <input type="password" placeholder="Authorization key" required />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="retype password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
 
           <div className="button-group">
             <button type="submit">Submit</button>
