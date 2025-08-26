@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "lucide-react";
 import Globe from "../../components/Globe";
 import "./ReportsAndAnalyticsPage.css";
+import axios from "axios";
 import {
   RadarChart,
   PolarGrid,
@@ -36,50 +37,21 @@ const Sidebar = ({ open }) => (
     </div>
     <div className="menu-bottom">
       <ul>
-        <li>
-              <Link to="/About">About Us</Link>
-            </li>
-            <li>
-              <Link to="/">Logout</Link>
-            </li>
+        <li><Link to="/About">About Us</Link></li>
+        <li><Link to="/">Logout</Link></li>
       </ul>
     </div>
   </aside>
 );
 
-const AnalyticsContent = ({ open, setOpen, projects, selectedProject, setSelectedProject }) => {
-  const [showDragDrop, setShowDragDrop] = useState(false);
-  const defaultRadar = [
-    { subject: "No Data", A: 0, fullMark: 100 },
-  ];
-  const defaultLine = [
-    { name: "No Data", value: 0 },
-  ];
-  const defaultBar = [
-    { name: "No Data", value: 0 },
-  ];
+const AnalyticsContent = ({ open, setOpen, selectedProject }) => {
+  const defaultRadar = [{ subject: "No Data", A: 0, fullMark: 100 }];
+  const defaultLine = [{ name: "No Data", value: 0 }];
+  const defaultBar = [{ name: "No Data", value: 0 }];
 
   const radarData = selectedProject?.radar || defaultRadar;
   const lineData = selectedProject?.line || defaultLine;
   const barData = selectedProject?.bar || defaultBar;
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      // Simulate loading project data from dropped files (replace with actual file parsing logic)
-      const file = files[0];
-      const project = {
-        name: file.name,
-        summary: `Summary of ${file.name}`,
-        radar: defaultRadar,
-        line: defaultLine,
-        bar: defaultBar,
-      };
-      setSelectedProject(project);
-    }
-    setShowDragDrop(false); // Hide after drop
-  };
 
   return (
     <div className={`analytics-content ${open ? "sidebar-open" : ""}`}>
@@ -87,30 +59,6 @@ const AnalyticsContent = ({ open, setOpen, projects, selectedProject, setSelecte
         <button className="hamburger" onClick={() => setOpen(!open)}>
           <Menu size={24} />
         </button>
-
-        {/* Projects Button */}
-        <button
-          className="projects-btn"
-          onClick={() => setShowDragDrop(!showDragDrop)}
-        >
-          Projects
-        </button>
-
-        {/* Drag and Drop Area for Project Files */}
-        {showDragDrop && (
-          <div
-            className="project-drag-drop"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={handleDrop}
-          >
-            {selectedProject ? (
-              <span>{selectedProject.name}</span>
-            ) : (
-              <span>Drop a project file here</span>
-            )}
-          </div>
-        )}
-
         <h1>Analytics</h1>
       </header>
 
@@ -120,7 +68,7 @@ const AnalyticsContent = ({ open, setOpen, projects, selectedProject, setSelecte
             <h3>Analytics Overview</h3>
             <div className="charts-grid">
               <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={250}>
                   <RadarChart data={radarData}>
                     <PolarGrid />
                     <PolarAngleAxis dataKey="subject" />
@@ -136,8 +84,9 @@ const AnalyticsContent = ({ open, setOpen, projects, selectedProject, setSelecte
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
+
               <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={250}>
                   <LineChart data={lineData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
@@ -147,8 +96,9 @@ const AnalyticsContent = ({ open, setOpen, projects, selectedProject, setSelecte
                   </LineChart>
                 </ResponsiveContainer>
               </div>
+
               <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={barData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
@@ -179,41 +129,20 @@ const AnalyticsContent = ({ open, setOpen, projects, selectedProject, setSelecte
 
 export default function Analytics() {
   const [open, setOpen] = useState(false);
-  const [projects, setProjects] = useState([
-    {
-      name: "Project Alpha",
-      summary: "Summary of Project Alpha",
-      radar: [
-        { subject: "Sales", A: 120, fullMark: 150 },
-        { subject: "Marketing", A: 98, fullMark: 150 },
-      ],
-      line: [
-        { name: "Jan", value: 40 },
-        { name: "Feb", value: 60 },
-      ],
-      bar: [
-        { name: "Q1", value: 300 },
-        { name: "Q2", value: 200 },
-      ],
-    },
-    {
-      name: "Project Beta",
-      summary: "Summary of Project Beta",
-      radar: [
-        { subject: "Dev", A: 70, fullMark: 100 },
-        { subject: "QA", A: 50, fullMark: 100 },
-      ],
-      line: [
-        { name: "Jan", value: 20 },
-        { name: "Feb", value: 30 },
-      ],
-      bar: [
-        { name: "Q1", value: 100 },
-        { name: "Q2", value: 150 },
-      ],
-    },
-  ]);
+  const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/projects") // replace with your backend API
+      .then((res) => {
+        setProjects(res.data);
+        if (res.data.length > 0) setSelectedProject(res.data[0]); // select first project
+      })
+      .catch((err) => {
+        console.error("Error fetching projects:", err);
+      });
+  }, []);
 
   return (
     <div className="analytics">
@@ -224,9 +153,7 @@ export default function Analytics() {
       <AnalyticsContent
         open={open}
         setOpen={setOpen}
-        projects={projects}
         selectedProject={selectedProject}
-        setSelectedProject={setSelectedProject}
       />
       {open && <div className="overlay" onClick={() => setOpen(false)} />}
     </div>

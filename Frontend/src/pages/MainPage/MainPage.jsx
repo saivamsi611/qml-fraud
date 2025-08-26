@@ -10,6 +10,7 @@ import axios from "axios";
 export default function MainPage() {
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
 
@@ -27,16 +28,16 @@ export default function MainPage() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/projects");
-        setProjects(response.data.projects || []);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
+        const res = await axios.get("http://localhost:5000/api/projects");
+        setProjects(res.data || []);
+      } catch (err) {
+        console.error("Error fetching projects:", err);
       }
     };
     fetchProjects();
   }, []);
 
-  // Handle clicks outside the sidebar to close it
+  // Handle clicks outside sidebar to close it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -51,6 +52,7 @@ export default function MainPage() {
 
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("touchstart", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
@@ -67,22 +69,21 @@ export default function MainPage() {
         const newProject = response.data.project;
         setProjects((prev) => [...prev, newProject]);
       }
-    } catch (error) {
-      console.error("Error creating project:", error);
+    } catch (err) {
+      console.error("Error creating project:", err);
       alert("Failed to create new project");
     }
   };
 
-  // Handle clicking a project
+  // Handle project selection
   const handleProjectClick = (project) => {
-    // Save project name to localStorage to retrieve in FormPage
-    localStorage.setItem("currentProject", project.name);
+    setSelectedProject(project);
     navigate("/main/form");
   };
 
   return (
     <div className={`app ${open ? "shrink" : ""}`}>
-      {/* Top bar with hamburger */}
+      {/* Top bar */}
       <header className="topbar">
         <button className="hamburger" onClick={() => setOpen(!open)}>
           ☰
@@ -102,35 +103,21 @@ export default function MainPage() {
       <aside className={`sidebar ${open ? "open" : ""}`} ref={sidebarRef}>
         <div className="menu-top">
           <ul>
-            <li>
-              <Link to="/main">Home</Link>
-            </li>
-            <li>
-              <Link to="/main/dashboard">Dashboard</Link>
-            </li>
+            <li><Link to="/main">Home</Link></li>
+            <li><Link to="/main/dashboard">Dashboard</Link></li>
             <hr />
-            <li>
-              <Link to="/main/reportsAndAnalytics">Reports & Analytics</Link>
-            </li>
+            <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
             <hr />
-            <li>
-              <Link to="/main/settings">Settings</Link>
-            </li>
-            <li>
-              <Link to="/main/help">Help</Link>
-            </li>
+            <li><Link to="/main/settings">Settings</Link></li>
+            <li><Link to="/main/help">Help</Link></li>
             <hr />
           </ul>
         </div>
         <div className="menu-bottom">
           <hr />
           <ul>
-            <li>
-              <Link to="/About">About Us</Link>
-            </li>
-            <li>
-              <Link to="/">Logout</Link>
-            </li>
+            <li><Link to="/About">About Us</Link></li>
+            <li><Link to="/">Logout</Link></li>
           </ul>
         </div>
       </aside>
@@ -158,35 +145,41 @@ export default function MainPage() {
           </div>
 
           <div className="middle-section">
+            {/* Left Pane - Project Directory */}
             <div className="left-pane">
               <div className="ProjectDirectory">
                 <h2>Project Directory</h2>
                 <hr />
                 <ul>
-                  {projects.length === 0 && <li>None</li>}
-                  {projects.map((project, index) => (
-                    <li
-                      key={index}
-                      onClick={() => handleProjectClick(project)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {project.name}
-                    </li>
-                  ))}
+                  {projects.length === 0 ? (
+                    <li>No Projects</li>
+                  ) : (
+                    projects.map((proj) => (
+                      <li
+                        key={proj.id}
+                        className={selectedProject?.id === proj.id ? "active" : ""}
+                        onClick={() => handleProjectClick(proj)}
+                      >
+                        {proj.name}
+                      </li>
+                    ))
+                  )}
                 </ul>
                 <FaPlusCircle
                   className="add-icon"
+                  title="Add New Project"
                   onClick={handleAddProject}
-                  style={{ cursor: "pointer" }}
                 />
               </div>
             </div>
 
+            {/* CSV Upload Section */}
             <div className="UContainer">
               <div className="topdiv"></div>
               <div className="bottomdiv">
                 <div className="CSVTitle">
-                  Upload a New Transactions File to Learn About the Transactions and their History
+                  Upload a New Transactions File to Learn About the Transactions
+                  and their History
                 </div>
                 <div className="CSVUploadbutton">
                   <Link to="/main/form">
@@ -196,6 +189,7 @@ export default function MainPage() {
               </div>
             </div>
 
+            {/* Right Pane - Donut Chart */}
             <div className="right-pane">
               <div className="right-top">
                 <DonutChart accuracy={90} />
@@ -203,6 +197,7 @@ export default function MainPage() {
             </div>
           </div>
 
+          {/* Bottom Section - Marquee */}
           <div className="bottom-section">
             <MPMarquee items={items} />
           </div>

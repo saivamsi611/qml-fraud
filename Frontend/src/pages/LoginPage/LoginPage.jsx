@@ -1,106 +1,108 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
-import Globe from "../../components/Globe"; // your globe component
-import "./LoginPage.css";
 import axios from "axios";
+import Globe from "../../components/Globe";
+import LinearLoader from "../../components/LinearLoader";
+import "./LoginPage.css";
 
 export default function Login() {
-  const cardRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const cardRef = useRef(null);
 
   // Animate card on mount
   useEffect(() => {
-    gsap.fromTo(
-      cardRef.current,
-      { opacity: 0, y: 50 },
-      { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
-    );
+    // Loader stays ~1.2s
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
   }, []);
 
-  // State for inputs
-  const [credentials, setCredentials] = useState({
-    email: "",
-    password: "",
-  });
+  useEffect(() => {
+    if (!isLoading && cardRef.current) {
+      gsap.fromTo(
+        cardRef.current,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+      );
+    }
+  }, [isLoading]);
 
-  // Loading state
-  const [loading, setLoading] = useState(false);
-
-  // Handle input change
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
-  };
-
-  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setError("");
 
     try {
-      const response = await axios.post("http://localhost:5000/login", credentials);
+      const response = await axios.post("http://localhost:5000/api/login", {
+        email,
+        password,
+      });
 
-      if (response.status === 200) {
-        alert("Login successful!");
-        setLoading(false);
+      if (response.data.success) {
+        console.log("Login success:", response.data);
 
-        // If backend sends token, store it
+        // store token if backend provides
         if (response.data.token) {
-          localStorage.setItem("authToken", response.data.token);
+          localStorage.setItem("token", response.data.token);
         }
 
-        navigate("/dashboard"); // redirect
+        // redirect after login
+        navigate("/home");
+      } else {
+        setError(response.data.message || "Invalid credentials");
       }
-    } catch (error) {
-      console.error("Login failed:", error);
-      alert("Invalid email or password");
-      setLoading(false);
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <div className="login-wrapper">
-      <Globe />
+    <>
+      {/* Loader always shows first */}
+      <LinearLoader isLoading={isLoading} />
 
-      {/* White overlay while loading */}
-      {loading && <div className="loading-overlay">Loading...</div>}
+      {!isLoading && (
+        <div className="login-wrapper">
+          <Globe />
+          <div ref={cardRef} className="login-card">
+            <h2>Login</h2>
+            <form onSubmit={handleSubmit}>
+              <label>Email</label>
+              <input
+                type="email"
+                placeholder="Your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
 
-      <div ref={cardRef} className="login-card">
-        <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Your email"
-            value={credentials.email}
-            onChange={handleChange}
-            required
-          />
+              <label>Password</label>
+              <input
+                type="password"
+                placeholder="Your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
 
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Your password"
-            value={credentials.password}
-            onChange={handleChange}
-            required
-          />
+              <button type="submit">Log In</button>
+            </form>
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Log In"}
-          </button>
-        </form>
+            {error && <p className="error-text">{error}</p>}
 
-        <div className="login-link">
-          Don't have an account? <Link to="/signup">Sign up</Link>
+            <div className="login-link">
+              Don&apos;t have an account? <Link to="/signup">Sign up</Link>
+            </div>
+            <div className="login-link">
+              <Link to="/ForgotPassword">Forgot Password?</Link>
+            </div>
+          </div>
         </div>
-        <div className="login-link">
-          <Link to="/ForgotPassword">Forgot Password?</Link>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }

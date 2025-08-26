@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./FormPage.css";
 import Globe from "../../components/Globe";
 import { useNavigate } from "react-router-dom";
@@ -6,13 +6,16 @@ import axios from "axios";
 
 export default function FormPage() {
   const navigate = useNavigate();
-  
-  const [formData, setFormData] = useState({
-    name: "",
-    file: null,
-  });
+
+  const [formData, setFormData] = useState({ name: "", file: null });
   const [dragActive, setDragActive] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  // Upload dialog states
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState("Calculating...");
+  const [uploadStartTime, setUploadStartTime] = useState(null);
+  const cancelTokenSource = useRef(null);
 
   // Retrieve project name from localStorage on mount
   useEffect(() => {
@@ -26,7 +29,9 @@ export default function FormPage() {
   };
 
   const handleFileChange = (file) => {
-    if (file && file.type === "text/csv") {
+    const validTypes = ["text/csv", "application/vnd.ms-excel"];
+    const isCSV = file && (validTypes.includes(file.type) || file.name.endsWith(".csv"));
+    if (isCSV) {
       setFormData({ ...formData, file });
     } else {
       alert("Please upload a valid CSV file.");
@@ -35,17 +40,27 @@ export default function FormPage() {
 
   const handleDrop = (e) => {
     e.preventDefault();
-    e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFileChange(e.dataTransfer.files[0]);
+      e.dataTransfer.clearData();
     }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragActive(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.file) {
-      alert("Please upload a CSV file.");
+    if (!formData.file || !formData.name) {
+      alert("Please provide both project name and CSV file.");
       return;
     }
 
@@ -54,38 +69,56 @@ export default function FormPage() {
     formDataToSend.append("fileName", formData.file.name);
     formDataToSend.append("file", formData.file);
 
+    setUploading(true);
+    setProgress(0);
+    setUploadStartTime(Date.now());
+
+    cancelTokenSource.current = axios.CancelToken.source();
+
     try {
-      setLoading(true);
+      const response = await axios.post("http://127.0.0.1:5000/upload_csv", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+        cancelToken: cancelTokenSource.current.token,
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setProgress(percent);
 
-      const response = await axios.post(
-        "http://localhost:5000/upload",
-        formDataToSend
-      );
+            const elapsedTime = (Date.now() - uploadStartTime) / 1000; // seconds
+            const uploadRate = progressEvent.loaded / elapsedTime; // bytes/sec
+            const remainingBytes = progressEvent.total - progressEvent.loaded;
+            const estTime = remainingBytes / uploadRate;
+            setTimeRemaining(`${Math.ceil(estTime)}s remaining`);
+          }
+        },
+      });
 
+      setUploading(false);
       if (response.status === 200) {
-        alert("CSV uploaded successfully!");
-        navigate("/main"); // redirect to main page
+        alert("✅ CSV uploaded successfully!");
+        navigate("/main"); // redirect on success
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error connecting to backend.");
-    } finally {
-      setLoading(false);
+      setUploading(false);
+      if (axios.isCancel(error)) {
+        alert("❌ Upload canceled.");
+      } else {
+        alert("🚨 Upload failed. Check backend.");
+      }
+    }
+  };
+
+  const handleCancelUpload = () => {
+    if (cancelTokenSource.current) {
+      cancelTokenSource.current.cancel("Upload canceled by user.");
+      setUploading(false);
     }
   };
 
   return (
-    <div className="formpage-wrapper">
+    <div className={`formpage-wrapper ${uploading ? "blurred" : ""}`}>
       <Globe className="globe-background" />
 
-      {/* Loading overlay */}
-      {loading && (
-        <div className="loading-overlay">
-          <h2>Loading...</h2>
-        </div>
-      )}
-
-      {/* Form container */}
       <div className="form-container">
         <h2>Upload CSV Form</h2>
         <form onSubmit={handleSubmit}>
@@ -102,17 +135,9 @@ export default function FormPage() {
           <label>Upload CSV</label>
           <div
             className={`drop-zone ${dragActive ? "active" : ""}`}
-            onDragEnter={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragActive(true);
-            }}
-            onDragOver={(e) => e.preventDefault()}
-            onDragLeave={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragActive(false);
-            }}
+            onDragEnter={handleDragOver}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => document.getElementById("file-input").click()}
           >
@@ -121,8 +146,8 @@ export default function FormPage() {
               id="file-input"
               type="file"
               accept=".csv"
-              onChange={(e) => handleFileChange(e.target.files[0])}
               style={{ display: "none" }}
+              onChange={(e) => handleFileChange(e.target.files[0])}
             />
           </div>
 
@@ -131,6 +156,19 @@ export default function FormPage() {
           <button type="submit">Submit</button>
         </form>
       </div>
+
+      {uploading && (
+        <div className="upload-dialog">
+          <h3>Uploading...</h3>
+          <p><strong>File:</strong> {formData.file?.name}</p>
+          <p><strong>Size:</strong> {(formData.file.size / (1024 * 1024)).toFixed(2)} MB</p>
+          <div className="progress-bar">
+            <div className="progress" style={{ width: `${progress}%` }}></div>
+          </div>
+          <p>{progress}% - {timeRemaining}</p>
+          <button className="cancel-btn" onClick={handleCancelUpload}>Cancel</button>
+        </div>
+      )}
     </div>
   );
 }

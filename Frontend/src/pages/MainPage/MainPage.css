@@ -5,18 +5,19 @@
   font-family: sans-serif;
 }
 
-* {
+
+*{
   text-decoration: none;
 }
 
-*:visited,
-a:active,
-a:hover {
+*:visited , a:active, a:hover {
   text-decoration: none;
   color: ivory;
 }
 
+
 /* Top bar */
+
 .topbar {
   width: 100%;
   height: 100px;
@@ -24,36 +25,42 @@ a:hover {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(64, 62, 65, 0.1);
+  background: rgb(64, 62, 65)(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-start;  
   z-index: 1;
 }
 
 .topbar h1 {
   margin: 0;
   padding: 0 1rem;
-  font-size: initial;
+  font-size: default;
   color: white;
 }
-
 /* Hamburger button */
 .hamburger {
+  transition: none;
+  background: none;
+  background-color: none;
+  width: auto;
+  font-size: 24px;
   background: none;
   border: none;
-  font-size: 24px;
   color: white;
   cursor: pointer;
   margin-right: 1rem;
+  background: none;
+  color: none;
   transition: none;
   box-shadow: none;
-}
+  }
 
 .hamburger:hover {
   background: none;
+  color: none;
   transition: none;
   box-shadow: none;
 }
@@ -61,20 +68,23 @@ a:hover {
 /* Sidebar */
 .sidebar {
   position: fixed;
-  top: 50px;
-  left: -280px;
+  top: 50px;                  /* below topbar */
+  left: -280px;               /* hidden by default */
   width: 180px;
-  height: calc(100% - 50px);
-  display: flex;
-  flex-direction: column;
+  height: calc(100% - 50px);  /* fill screen BELOW topbar */
+  display: flex;              /* enable flex */
+  flex-direction: column;     /* vertical layout */
+
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+
   color: white;
   padding: 1rem;
   transition: left 0.3s ease;
-  box-sizing: border-box;
-  overflow-y: auto;
+  box-sizing: border-box;     /* include padding in height */
+  overflow-y: auto;           /* scroll if menu too long */
 }
 
 .sidebar.open {
@@ -82,7 +92,7 @@ a:hover {
 }
 
 .menu-bottom {
-  margin-top: auto;
+  margin-top: auto; /* pushes About Us + Logout to bottom */
 }
 
 .sidebar ul {
@@ -101,15 +111,17 @@ a:hover {
   margin-left: auto;
   display: flex;
   align-items: center;
-  margin-right: 1rem;
+  margin-left: auto; /* Align to the right */
+  margin-right: 1rem; /* Add some space from the right edge */
 }
 
 /* Profile image */
+
 .profile-image {
   width: auto !important;
   height: 60px !important;
   border-radius: 50%;
-  margin-right: 0.5rem;
+  margin-right: 0.5rem; /* Space between image and name */
 }
 
 /* Profile name */
@@ -124,6 +136,10 @@ a:hover {
   padding: 0;
   margin: 0;
 }
+.menu-bottom {
+  margin-top: auto; /* pushes it to the bottom */
+}
+
 
 /* Content */
 .content {
@@ -134,11 +150,15 @@ a:hover {
   padding: 1rem;
 }
 
+/* Grid Box Layout */
+
+/* Keep container as is for top + middle sections */
+
 /* Container */
 .container {
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto; /* top, middle, bottom */
+  grid-template-columns: 1fr ;    /* two columns for middle section */
   grid-gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -151,44 +171,43 @@ a:hover {
 
 /* Bottom Section full container width */
 .bottom-section {
-  grid-column: 1 / -1;
+  grid-column: 1 / -1;      /* span all columns */
   height: 80px;
-  margin-left: 0 !important;
+  margin-left: 0px !important;
 }
 
-/* Top section */
-.top-section {
+/* Keep all other styles the same */
+.top-section { 
   height: 150px;
-  border-radius: 8px;
+  border-radius: 8px; 
 }
 
-/* Middle section */
-.middle-section {
+.middle-section { 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 20px;
-}
+  grid-gap: 20px; }
 
-/* Left pane */
-.left-pane {
+.left-pane { 
   height: 300px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   position: relative;
+  }
+
+.right-pane { display: grid; grid-template-rows: 1fr ; grid-gap: 20px; }
+
+.right-top { margin:50px; }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .middle-section { grid-template-columns: 1fr; }
+  .right-pane { grid-template-rows: auto auto; }
 }
 
-/* Right pane */
-.right-pane {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-gap: 20px;
-}
 
-.right-top {
-  margin: 50px;
-}
 
+/* SVUFlexBox styles */  
 /* SVUFFlexBarContainer Styles */
 .SVUFFlexBarContainer {
   display: flex;
@@ -200,7 +219,7 @@ a:hover {
   border-radius: 10px;
 }
 
-/* Individual sections */
+/* Each individual section like Status, Version, Uptime */
 .SVU1,
 .SVU2,
 .SVU3 {
@@ -209,20 +228,22 @@ a:hover {
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  border: 1px solid #aaa;
+    border: 1px solid #aaa;
+
 }
 
-/* Inner boxes */
+/* Inner boxes inside each SVU section */
 .inner-box {
   padding: 8px 12px;
   margin: 4px 0;
-  font-size: 24px;
+  font-size:24px;
   text-align: center;
   font-weight: 500;
   color: #eae6e6;
 }
 
-.donut-box {
+
+ .donut-box{
   scale: 1.0;
 }
 
@@ -231,7 +252,7 @@ a:hover {
   position: absolute;
   height: 100%;
   width: 300px;
-  background: rgba(64, 62, 65, 0.1);
+  background: rgb(64, 62, 65)(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -244,9 +265,9 @@ a:hover {
   color: #f9f7f7;
   font-weight: bold;
   text-align: center;
-}
+} 
 
-.ProjectDirectory ul {
+ .ProjectDirectory ul {
   list-style: none;
   padding: 0;
   margin: 0 0 15px;
@@ -258,23 +279,27 @@ a:hover {
   font-size: 16px;
 }
 
-.add-icon {
+
+ .add-icon {
   position: absolute;
   bottom: 15px;
   right: 15px;
-  width: 30px;
+  width: 30px;   
   height: 30px;
-  color: #4ca3af;
+  color: #4ca3af;  
   cursor: pointer;
-}
+} 
 
-/* UploadSection */
+/* UploadSection.css */
+
 .UContainer {
   display: grid;
-  grid-template-rows: 30% 70%;
-  height: 300px;
-  gap: 10px;
+  grid-template-rows: 30% 70%; /* Divides the container into two equal rows */
+  height: 300px; /* Set desired height */
+  gap: 10px;     /* Space between top and bottom sections */
 }
+
+
 
 .bottomdiv {
   background-color: transparent;
@@ -284,9 +309,11 @@ a:hover {
   display: grid;
   grid-template-rows: 1fr 1fr;
   gap: 10px;
+                   
 }
 
-.CSVTitle {
+
+.CSVTitle{
   font-size: 20px;
   color: #f9f7f7;
   font-weight: bold;
@@ -294,14 +321,14 @@ a:hover {
   margin-top: 10px;
 }
 
-.CSVUploadbutton {
+.CSVUploadbutton{
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
 
-.CSVUploadbutton:hover {
+.CSVUploadbutton:hover{
   background-color: rgba(0, 255, 255, 0.352) !important;
   color: white !important;
   border-color: #aaa !important;
@@ -310,19 +337,22 @@ a:hover {
   transition: none !important;
 }
 
+
+
 .empty-box {
   width: 80px;
   border: 1px solid #aaa;
   border-radius: 6px;
 }
 
+
 .bottom-section {
   display: flex;
-  gap: 20px;
+  gap: 20px; /* space between ProjectDirectory & UploadContainer */
   margin-top: 20px;
 }
 
-.scroll-container {
+.scroll-container{
   position: absolute;
   padding: auto;
   margin-left: -60px;
@@ -336,6 +366,11 @@ a:hover {
   transition: margin-left 0.3s ease;
 }
 
+/* Keep sidebar fixed width in sync */
+.sidebar {
+  width: 180px;
+}
+
 /* Move topbar along with the content when sidebar is open */
 .app.shrink .topbar {
   margin-left: 250px;
@@ -347,7 +382,7 @@ a:hover {
   transition: margin-left 0.3s ease;
 }
 
-.app.shrink #profilecontainer {
+.app.shrink #profilecontainer{
   margin-right: 250px;
   transition: margin-right 0.3s ease;
 }
@@ -357,428 +392,7 @@ a:hover {
   transition: margin-right 0.3s ease;
 }
 
-.app.shrink .scroll-container {
+.app.shrink .scroll-container{
   margin-right: -35px;
-  transition: margin-right 0.3s ease;
-}
-
-/* Mobile View (max-width: 768px) */
-@media (max-width: 768px) {
-  .app {
-    flex-direction: column;
-  }
-
-  .topbar {
-    height: 60px;
-    padding: 0 0.5rem;
-    justify-content: space-between;
-  }
-
-  .topbar h1 {
-    font-size: 1rem;
-    padding: 0;
-  }
-
-  .hamburger {
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
-  }
-
-  #profilecontainer {
-    margin-right: 0.5rem;
-  }
-
-  .profile-image {
-    width: 30px !important;
-    height: 30px !important;
-  }
-
-  .profile-name {
-    font-size: 0.8rem;
-  }
-
-  .sidebar {
-    top: 60px;
-    width: 70%;
-    max-width: 200px;
-    left: -100%;
-    height: calc(100vh - 60px);
-    z-index: 999;
-  }
-
-  .sidebar.open {
-    left: 0;
-  }
-
-  .content {
-    margin-top: 60px;
-    padding: 0.5rem;
-    margin: 0 !important;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .container {
-    padding: 0.5rem;
-    grid-gap: 10px;
-    margin: 0 !important;
-    width: 100%;
-    max-width: none !important;
-    box-sizing: border-box;
-  }
-
-  .top-section {
-    height: auto;
-  }
-
-  .SVUFFlexBarContainer {
-    flex-direction: column;
-    gap: 0.5rem;
-    margin: 10px 0;
-    padding: 0.5rem;
-  }
-
-  .SVU1,
-  .SVU2,
-  .SVU3 {
-    padding: 0.5rem;
-  }
-
-  .inner-box {
-    font-size: 1rem;
-    padding: 0.4rem;
-  }
-
-  .middle-section {
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
-  }
-
-  .left-pane {
-    height: auto;
-    position: static;
-  }
-
-  .ProjectDirectory {
-    width: 100%;
-    height: auto;
-    position: static;
-    padding: 0.5rem;
-    display: block;
-  }
-
-  .ProjectDirectory h2 {
-    font-size: 1.1rem;
-  }
-
-  .ProjectDirectory li {
-    font-size: 0.9rem;
-  }
-
-  .add-icon {
-    width: 20px;
-    height: 20px;
-    bottom: 8px;
-    right: 8px;
-  }
-
-  .UContainer {
-    height: auto;
-    grid-template-rows: auto 1fr;
-    gap: 5px;
-  }
-
-  .bottomdiv {
-    padding: 0.5rem;
-  }
-
-  .CSVTitle {
-    font-size: 0.9rem;
-    margin-top: 5px;
-  }
-
-  .CSVUploadbutton {
-    padding: 0.5rem;
-  }
-
-  .upload-btn {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
-  }
-
-  .right-pane {
-    grid-template-rows: auto;
-  }
-
-  .right-top {
-    margin: 10px 0;
-  }
-
-  .bottom-section {
-    height: auto;
-    padding: 0.5rem 0;
-  }
-
-  .app.shrink {
-    margin-left: 0 !important;
-  }
-
-  .app.shrink .topbar,
-  .app.shrink .topbar h1,
-  .app.shrink #profilecontainer,
-  .app.shrink .hamburger,
-  .app.shrink .scroll-container {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-}
-
-/* Enhanced Small Screen View (≤375px) */
-@media (max-width: 375px) {
-  .content {
-    margin: 0 !important;
-    padding: 0.3rem;
-  }
-
-  .container {
-    margin: 0 !important;
-    padding: 0.3rem;
-    width: 100%;
-    max-width: none !important;
-    box-sizing: border-box;
-  }
-
-  .topbar {
-    height: 50px;
-  }
-
-  .topbar h1 {
-    font-size: 0.9rem;
-  }
-
-  .hamburger {
-    font-size: 1rem;
-    margin-right: 0.3rem;
-  }
-
-  .profile-image {
-    width: 25px !important;
-    height: 25px !important;
-  }
-
-  .profile-name {
-    font-size: 0.7rem;
-  }
-
-  .sidebar {
-    width: 80%;
-    max-width: 180px;
-  }
-
-  .SVUFFlexBarContainer {
-    margin: 5px 0;
-    padding: 0.3rem;
-  }
-
-  .SVU1,
-  .SVU2,
-  .SVU3 {
-    padding: 0.3rem;
-  }
-
-  .inner-box {
-    font-size: 0.9rem;
-    padding: 0.3rem;
-  }
-
-  .ProjectDirectory {
-    padding: 0.3rem;
-  }
-
-  .ProjectDirectory h2 {
-    font-size: 1rem;
-  }
-
-  .ProjectDirectory li {
-    font-size: 0.8rem;
-  }
-
-  .add-icon {
-    width: 18px;
-    height: 18px;
-    bottom: 6px;
-    right: 6px;
-  }
-
-  .UContainer {
-    gap: 3px;
-  }
-
-  .bottomdiv {
-    padding: 0.3rem;
-  }
-
-  .CSVTitle {
-    font-size: 0.8rem;
-    margin-top: 3px;
-  }
-
-  .upload-btn {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.6rem;
-  }
-
-  .right-top {
-    margin: 5px 0;
-  }
-
-  .bottom-section {
-    padding: 0.3rem 0;
-  }
-}
-
-/* Extra Small Screen Fix (≤320px) with Targeted Fix */
-@media (max-width: 320px) {
-  .app {
-    width: 100vw !important;
-    overflow-x: hidden !important;
-    position: relative !important;
-  }
-
-  .content {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    position: relative !important;
-    left: 0 !important;
-  }
-
-  .container {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
-    box-sizing: border-box !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    align-items: flex-start !important;
-    position: relative !important;
-    left: 0 !important;
-  }
-
-  .topbar {
-    padding: 0 0.2rem;
-    justify-content: space-between;
-  }
-
-  .topbar h1 {
-    font-size: 0.8rem;
-  }
-
-  .hamburger {
-    margin-right: 0.2rem;
-    font-size: 0.9rem;
-  }
-
-  .profile-image {
-    width: 20px !important;
-    height: 20px !important;
-  }
-
-  .profile-name {
-    font-size: 0.6rem;
-  }
-
-  .sidebar {
-    width: 90%;
-    max-width: 160px;
-  }
-
-  .SVUFFlexBarContainer {
-    margin: 3px 0;
-    padding: 0.2rem;
-  }
-
-  .SVU1,
-  .SVU2,
-  .SVU3 {
-    margin-top: 40px;
-    padding: 0.2rem;
-  }
-
-  .inner-box {
-    font-size: 0.8rem;
-    padding: 0.2rem;
-  }
-
-  .ProjectDirectory {
-    padding: 0.2rem;
-  }
-
-  .ProjectDirectory h2 {
-    font-size: 0.9rem;
-  }
-
-  .ProjectDirectory li {
-    font-size: 0.7rem;
-  }
-
-  .add-icon {
-    width: 16px;
-    height: 16px;
-    bottom: 4px;
-    right: 4px;
-  }
-
-  .UContainer {
-    gap: 2px;
-  }
-
-  .bottomdiv {
-    padding: 0.2rem;
-  }
-
-  .CSVTitle {
-    font-size: 0.7rem;
-    margin-top: 2px;
-  }
-
-  .upload-btn {
-    font-size: 0.6rem;
-    padding: 0.2rem 0.4rem;
-  }
-
-  .right-top {
-    margin: 3px 0;
-  }
-
-  .bottom-section {
-    padding: 0.2rem 0;
-  }
-
-  .scroll-container {
-    margin-left: 0;
-    overflow-x: hidden;
-  }
-
-  /* Fallback for external components */
-  .content > * {
-    max-width: 100vw !important;
-    min-width: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  .container > * {
-    max-width: 100vw !important;
-    min-width: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-  }
+  transition: margin-right 0.3s ease;  
 }

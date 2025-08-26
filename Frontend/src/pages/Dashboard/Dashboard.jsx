@@ -1,35 +1,49 @@
-import React, { useState } from "react";
-import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 import { Link } from "react-router-dom";
 import { Menu } from "lucide-react";
 import Globe from "../../components/Globe";
 import "./Dashboard.css";
 
-const riskData = [
-  { name: "Critical Risk", value: 20 },
-  { name: "Low Risk", value: 35 },
-  { name: "Approved", value: 45 },
-];
-
-const riskColors = ["#ef4444", "#facc15", "#22c55e"];
-
-const transactions = [
-  { id: 1, user: "Lokesh", amount: "₹500", status: "approved" },
-  { id: 2, user: "Rahul", amount: "₹750", status: "pending" },
-  { id: 3, user: "Anjali", amount: "₹300", status: "critical" },
-  { id: 4, user: "Kiran", amount: "₹1200", status: "approved" },
-];
-
-// Sample data for the new bar chart
-const growthData = [
-  { month: "Jan", growth: 30 },
-  { month: "Feb", growth: 45 },
-  { month: "Mar", growth: 60 },
-  { month: "Apr", growth: 35 },
-];
-
 export default function Dashboard() {
   const [open, setOpen] = useState(false);
+
+  // ✅ States for dynamic data from backend
+  const [stats, setStats] = useState({ total: 0, approved: 0, pending: 0 });
+  const [riskData, setRiskData] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [growthData, setGrowthData] = useState([]);
+
+  // ✅ Fetch data from backend
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/dashboard") // Change URL to your backend
+      .then((res) => {
+        const { stats, risks, transactions, growth } = res.data;
+
+        setStats(stats || { total: 0, approved: 0, pending: 0 });
+        setRiskData(risks || []);
+        setTransactions(transactions || []);
+        setGrowthData(growth || []);
+      })
+      .catch((err) => {
+        console.error("Error fetching dashboard data:", err);
+      });
+  }, []);
+
+  const riskColors = ["#ef4444", "#facc15", "#22c55e"];
 
   return (
     <div className="dashboard">
@@ -40,20 +54,34 @@ export default function Dashboard() {
       <aside className={`sidebar ${open ? "open" : ""}`}>
         <div className="menu-top">
           <ul>
-            <li><Link to="/main">Home</Link></li>
-            <li><Link to="/main/dashboard">Dashboard</Link></li>
+            <li>
+              <Link to="/main">Home</Link>
+            </li>
+            <li>
+              <Link to="/main/dashboard">Dashboard</Link>
+            </li>
             <hr />
-            <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
+            <li>
+              <Link to="/main/reportsAndAnalytics">Reports & Analytics</Link>
+            </li>
             <hr />
-            <li><Link to="/main/settings">Settings</Link></li>
-            <li><Link to="/main/help">Help</Link></li>
+            <li>
+              <Link to="/main/settings">Settings</Link>
+            </li>
+            <li>
+              <Link to="/main/help">Help</Link>
+            </li>
             <hr />
           </ul>
         </div>
         <div className="menu-bottom">
           <ul>
-            <li><Link to="/About">About Us</Link></li>
-            <li><Link to="/">Logout</Link></li>
+            <li>
+              <Link to="/About">About Us</Link>
+            </li>
+            <li>
+              <Link to="/">Logout</Link>
+            </li>
           </ul>
         </div>
       </aside>
@@ -71,15 +99,15 @@ export default function Dashboard() {
             <div className="stats-row">
               <div className="stat-box">
                 <h3>Total Users</h3>
-                <p>1,245</p>
+                <p>{stats.total}</p>
               </div>
               <div className="stat-box">
                 <h3>Approved</h3>
-                <p>980</p>
+                <p>{stats.approved}</p>
               </div>
               <div className="stat-box">
                 <h3>Pending</h3>
-                <p>165</p>
+                <p>{stats.pending}</p>
               </div>
             </div>
 
@@ -95,7 +123,10 @@ export default function Dashboard() {
                   dataKey="value"
                 >
                   {riskData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={riskColors[index % riskColors.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={riskColors[index % riskColors.length]}
+                    />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -126,7 +157,7 @@ export default function Dashboard() {
               </table>
             </div>
 
-            {/* New Growth Bar Chart */}
+            {/* Growth Bar Chart */}
             <div className="chart-box">
               <h2>Monthly Growth</h2>
               <ResponsiveContainer width="100%" height={200}>

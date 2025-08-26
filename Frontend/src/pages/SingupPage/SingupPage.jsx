@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SingupPage.css";
@@ -8,7 +8,6 @@ export default function SignupPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  // State to hold input values
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -37,7 +36,6 @@ export default function SignupPage() {
     }
 
     try {
-      // Send data to backend
       const response = await axios.post("http://localhost:5000/signup", {
         username: formData.username,
         email: formData.email,
@@ -76,6 +74,16 @@ export default function SignupPage() {
             name="email"
             placeholder="email"
             value={formData.email}
+            onChange={handleChange}
+            required
+          />
+
+          <label>Phone</label>
+          <input
+            type="text"
+            name="phone"
+            placeholder="phone"
+            value={formData.phone}
             onChange={handleChange}
             required
           />
