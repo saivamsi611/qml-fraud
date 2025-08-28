@@ -62,10 +62,10 @@ export default function MainPage() {
   // Add new project
   const handleAddProject = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/projects", {
+      const response = await axios.post("http://localhost:5000/api/projects", {
         name: "Untitled Project"
       });
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         const newProject = response.data.project;
         setProjects((prev) => [...prev, newProject]);
       }
@@ -85,7 +85,11 @@ export default function MainPage() {
     <div className={`app ${open ? "shrink" : ""}`}>
       {/* Top bar */}
       <header className="topbar">
-        <button className="hamburger" onClick={() => setOpen(!open)}>
+        <button
+          className="hamburger"
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle Sidebar"
+        >
           ☰
         </button>
         <h1>Fraud Detection Using QML Dashboard</h1>
@@ -105,16 +109,21 @@ export default function MainPage() {
           <ul>
             <li><Link to="/main">Home</Link></li>
             <li><Link to="/main/dashboard">Dashboard</Link></li>
-            <hr />
+          </ul>
+          <hr />
+          <ul>
             <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
-            <hr />
+            <li><Link to="/main/transactions">Transactions</Link></li> {/* Fixed route */}
+          </ul>
+          <hr />
+          <ul>
             <li><Link to="/main/settings">Settings</Link></li>
             <li><Link to="/main/help">Help</Link></li>
-            <hr />
           </ul>
-        </div>
-        <div className="menu-bottom">
           <hr />
+        </div>
+
+        <div className="menu-bottom">
           <ul>
             <li><Link to="/About">About Us</Link></li>
             <li><Link to="/">Logout</Link></li>

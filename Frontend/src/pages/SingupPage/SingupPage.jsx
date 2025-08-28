@@ -5,6 +5,7 @@ import "./SingupPage.css";
 import Globe from "../../components/Globe"; // 🌍 background globe
 
 export default function SignupPage() {
+  console.log("SignUpPage")
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -28,8 +29,9 @@ export default function SignupPage() {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  console.log("Form submitted")
 
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
@@ -80,15 +82,7 @@ export default function SignupPage() {
             required
           />
 
-          <label>Phone</label>
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
+         
 
           <label>Password</label>
           <div className="password-field">
