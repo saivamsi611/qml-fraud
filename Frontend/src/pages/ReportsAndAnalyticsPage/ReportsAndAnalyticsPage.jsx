@@ -1,161 +1,163 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Menu } from "lucide-react";
-import Globe from "../../components/Globe";
-import "./ReportsAndAnalyticsPage.css";
-import axios from "axios";
+import React, { useState, useEffect, useRef } from "react";
+import { io } from "socket.io-client";
 import {
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-  Tooltip,
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  BarChart,
-  Bar,
-  ResponsiveContainer,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
+import "./ReportsAndAnalyticsPage.css";
 
-const Sidebar = ({ open }) => (
-  <aside className={`sidebar ${open ? "open" : ""}`}>
-    <div className="menu-top">
-      <ul>
-        <li><Link to="/main">Home</Link></li>
-        <li><Link to="/main/dashboard">Dashboard</Link></li>
-        <hr />
-        <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
-        <hr />
-        <li><Link to="/main/settings">Settings</Link></li>
-        <li><Link to="/main/help">Help</Link></li>
-        <hr />
-      </ul>
-    </div>
-    <div className="menu-bottom">
-      <ul>
-        <li><Link to="/About">About Us</Link></li>
-        <li><Link to="/">Logout</Link></li>
-      </ul>
-    </div>
-  </aside>
-);
-
-const AnalyticsContent = ({ open, setOpen, selectedProject }) => {
-  const defaultRadar = [{ subject: "No Data", A: 0, fullMark: 100 }];
-  const defaultLine = [{ name: "No Data", value: 0 }];
-  const defaultBar = [{ name: "No Data", value: 0 }];
-
-  const radarData = selectedProject?.radar || defaultRadar;
-  const lineData = selectedProject?.line || defaultLine;
-  const barData = selectedProject?.bar || defaultBar;
-
-  return (
-    <div className={`analytics-content ${open ? "sidebar-open" : ""}`}>
-      <header className="header">
-        <button className="hamburger" onClick={() => setOpen(!open)}>
-          <Menu size={24} />
-        </button>
-        <h1>Analytics</h1>
-      </header>
-
-      <div className="main-layout">
-        <div className="left-container">
-          <div className="chart-card">
-            <h3>Analytics Overview</h3>
-            <div className="charts-grid">
-              <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height={250}>
-                  <RadarChart data={radarData}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="subject" />
-                    <PolarRadiusAxis />
-                    <Radar
-                      name="Metrics"
-                      dataKey="A"
-                      stroke="#06b6d4"
-                      fill="#06b6d4"
-                      fillOpacity={0.6}
-                    />
-                    <Tooltip />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart data={lineData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="value" stroke="#06b6d4" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart data={barData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#06b6d4" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="right-container">
-          <div className="info-box">
-            <h3>Summary</h3>
-            {selectedProject ? (
-              <p>{selectedProject.summary}</p>
-            ) : (
-              <p>No data available. Drop a project file to see analytics.</p>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+const SOCKET_URL = "http://127.0.0.1:8080";
 
 export default function Analytics() {
-  const [open, setOpen] = useState(false);
-  const [projects, setProjects] = useState([]);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [projectName, setProjectName] = useState("testcsv");
+  const [trainingStatus, setTrainingStatus] = useState("Idle");
+  const [finalResults, setFinalResults] = useState(null);
+
+  const [metrics, setMetrics] = useState({
+    loss: [],
+    accuracy: [],
+    f1: [],
+    auc: [],
+    precision: [],
+    recall: [],
+  });
+
+  const socketRef = useRef(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/projects") // replace with your backend API
-      .then((res) => {
-        setProjects(res.data);
-        if (res.data.length > 0) setSelectedProject(res.data[0]); // select first project
-      })
-      .catch((err) => {
-        console.error("Error fetching projects:", err);
-      });
-  }, []);
+    if (socketRef.current) socketRef.current.disconnect();
 
-  return (
-    <div className="analytics">
-      <div className="globe-bg">
-        <Globe />
+    socketRef.current = io(SOCKET_URL, { withCredentials: true });
+
+    socketRef.current.on("connect", () => console.log("✅ Socket connected"));
+    socketRef.current.on("disconnect", () => console.log("❌ Socket disconnected"));
+
+    socketRef.current.on("training_progress", (data) => {
+      if (data.project_name !== projectName) return;
+
+      const safe = (v) => (typeof v === "number" && !isNaN(v) ? v : null);
+      const update = (key, value) => {
+        if (value !== null) {
+          setMetrics((prev) => ({
+            ...prev,
+            [key]: [...prev[key], { epoch: data.epoch, value }],
+          }));
+        }
+      };
+
+      update("loss", safe(data.loss));
+      update("accuracy", safe(data.accuracy));
+      update("f1", safe(data.f1));
+      update("auc", safe(data.auc));
+      update("precision", safe(data.precision));
+      update("recall", safe(data.recall));
+
+      setTrainingStatus(
+        `Epoch ${data.epoch}/${data.total_epochs} | ${data.progress}% | Loss: ${data.loss?.toFixed(4)} | Acc: ${data.accuracy?.toFixed(4)}`
+      );
+    });
+
+    socketRef.current.on("training_complete", (data) => {
+      setFinalResults(data.results);
+      setTrainingStatus("✅ Training completed!");
+    });
+
+    socketRef.current.on("training_error", (err) => {
+      setTrainingStatus(`❌ Error: ${err.message || err}`);
+    });
+
+    return () => socketRef.current.disconnect();
+  }, [projectName]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      fetch(`${SOCKET_URL}/train?project_name=${encodeURIComponent(projectName)}`)
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.status === "success") {
+            setTrainingStatus("✅ Training started...");
+          } else {
+            setTrainingStatus(`❌ ${json.message || "Unknown error"}`);
+          }
+        })
+        .catch(() => setTrainingStatus("❌ Failed to start training"));
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [projectName]);
+
+  const chartConfigs = [
+    { title: "Loss", key: "loss", stroke: "#ef4444" },
+    { title: "Accuracy", key: "accuracy", stroke: "#10b981" },
+    { title: "F1 Score", key: "f1", stroke: "#3b82f6" },
+    { title: "AUC", key: "auc", stroke: "#8b5cf6" },
+    { title: "Precision", key: "precision", stroke: "#f97316" },
+    { title: "Recall", key: "recall", stroke: "#06b6d4" },
+  ];
+
+  const statusClass = trainingStatus.includes("✅")
+    ? "success"
+    : trainingStatus.includes("❌")
+    ? "error"
+    : "info";
+
+return (
+  <div className="analytics-page">
+    <div className="analytics-layout">
+      {/* Left Panel */}
+      <div className="left-panel">
+        <div className="input-group card">
+          <label htmlFor="projectName">Project Name</label>
+          <input
+            id="projectName"
+            className="project-input"
+            type="text"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+          />
+        </div>
+
+        {finalResults && (
+          <div className="report-card card">
+            <h3>📊 Classification Report</h3>
+            <pre>
+              {JSON.stringify(
+                finalResults.classification_report || finalResults.summary || finalResults,
+                null,
+                2
+              )}
+            </pre>
+          </div>
+        )}
       </div>
-      <Sidebar open={open} />
-      <AnalyticsContent
-        open={open}
-        setOpen={setOpen}
-        selectedProject={selectedProject}
-      />
-      {open && <div className="overlay" onClick={() => setOpen(false)} />}
+
+      {/* Center Panel - Grid of Charts */}
+      <div className="center-panel">
+        <div className="charts-grid">
+          {chartConfigs.map(({ title, key, stroke }) => (
+            <div className="chart-card card" key={key}>
+              <div className="card-header">{title}</div>
+              <ResponsiveContainer width="100%" height={150}>
+                <LineChart data={metrics[key]}>
+                  <CartesianGrid stroke="#334155" />
+                  <XAxis dataKey="epoch" />
+                  <YAxis domain={[0, 1]} />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="value" stroke={stroke} strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Right Panel */}
+      <div className="right-panel">
+        <div className={`training-status card ${statusClass}`}>
+          {trainingStatus}
+        </div>
+      </div>
     </div>
-  );
+  </div>
+);
+
 }
