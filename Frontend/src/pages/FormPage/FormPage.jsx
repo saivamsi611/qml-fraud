@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./FormPage.css";
 import Globe from "../../components/Globe";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import "./FormPage.css"
 export default function FormPage() {
   const navigate = useNavigate();
 
@@ -14,7 +13,9 @@ export default function FormPage() {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState("Calculating...");
-  const [uploadStartTime, setUploadStartTime] = useState(null);
+
+  // Use a ref to store upload start time so it persists correctly during upload progress callbacks
+  const uploadStartTime = useRef(null);
   const cancelTokenSource = useRef(null);
 
   // Retrieve project name from localStorage on mount
@@ -30,7 +31,8 @@ export default function FormPage() {
 
   const handleFileChange = (file) => {
     const validTypes = ["text/csv", "application/vnd.ms-excel"];
-    const isCSV = file && (validTypes.includes(file.type) || file.name.endsWith(".csv"));
+    const isCSV =
+      file && (validTypes.includes(file.type) || file.name.toLowerCase().endsWith(".csv"));
     if (isCSV) {
       setFormData({ ...formData, file });
     } else {
@@ -38,8 +40,10 @@ export default function FormPage() {
     }
   };
 
+  // Fixed drag handlers to avoid default browser behaviors properly
   const handleDrop = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFileChange(e.dataTransfer.files[0]);
@@ -49,11 +53,19 @@ export default function FormPage() {
 
   const handleDragOver = (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setDragActive(true);
   };
 
   const handleDragLeave = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setDragActive(false);
   };
 
@@ -65,18 +77,18 @@ export default function FormPage() {
     }
 
     const formDataToSend = new FormData();
-    formDataToSend.append("projectName", formData.name);
+    formDataToSend.append("project_name", formData.name);
     formDataToSend.append("fileName", formData.file.name);
     formDataToSend.append("file", formData.file);
 
     setUploading(true);
     setProgress(0);
-    setUploadStartTime(Date.now());
+    uploadStartTime.current = Date.now(); // Use ref here
 
     cancelTokenSource.current = axios.CancelToken.source();
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/upload_csv", formDataToSend, {
+      const response = await axios.post("http://127.0.0.1:8080/upload_csv", formDataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
         cancelToken: cancelTokenSource.current.token,
         onUploadProgress: (progressEvent) => {
@@ -84,11 +96,15 @@ export default function FormPage() {
             const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
             setProgress(percent);
 
-            const elapsedTime = (Date.now() - uploadStartTime) / 1000; // seconds
-            const uploadRate = progressEvent.loaded / elapsedTime; // bytes/sec
-            const remainingBytes = progressEvent.total - progressEvent.loaded;
-            const estTime = remainingBytes / uploadRate;
-            setTimeRemaining(`${Math.ceil(estTime)}s remaining`);
+            const elapsedTime = (Date.now() - uploadStartTime.current) / 1000; // seconds
+            if (elapsedTime > 0) {
+              const uploadRate = progressEvent.loaded / elapsedTime; // bytes/sec
+              const remainingBytes = progressEvent.total - progressEvent.loaded;
+              const estTime = remainingBytes / uploadRate;
+              setTimeRemaining(`${Math.ceil(estTime)}s remaining`);
+            } else {
+              setTimeRemaining("Calculating...");
+            }
           }
         },
       });
@@ -96,7 +112,8 @@ export default function FormPage() {
       setUploading(false);
       if (response.status === 200) {
         alert("✅ CSV uploaded successfully!");
-        navigate("/main"); // redirect on success
+        // Pass projectName via state when navigating
+        navigate("/main/ReportsAndAnalytics", { state: { projectName: formData.name } });
       }
     } catch (error) {
       setUploading(false);
@@ -135,7 +152,7 @@ export default function FormPage() {
           <label>Upload CSV</label>
           <div
             className={`drop-zone ${dragActive ? "active" : ""}`}
-            onDragEnter={handleDragOver}
+            onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -153,20 +170,30 @@ export default function FormPage() {
 
           {formData.file && <p className="file-name">📂 {formData.file.name}</p>}
 
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={uploading}>
+            Submit
+          </button>
         </form>
       </div>
 
       {uploading && (
         <div className="upload-dialog">
           <h3>Uploading...</h3>
-          <p><strong>File:</strong> {formData.file?.name}</p>
-          <p><strong>Size:</strong> {(formData.file.size / (1024 * 1024)).toFixed(2)} MB</p>
+          <p>
+            <strong>File:</strong> {formData.file?.name}
+          </p>
+          <p>
+            <strong>Size:</strong> {(formData.file.size / (1024 * 1024)).toFixed(2)} MB
+          </p>
           <div className="progress-bar">
             <div className="progress" style={{ width: `${progress}%` }}></div>
           </div>
-          <p>{progress}% - {timeRemaining}</p>
-          <button className="cancel-btn" onClick={handleCancelUpload}>Cancel</button>
+          <p>
+            {progress}% - {timeRemaining}
+          </p>
+          <button className="cancel-btn" onClick={handleCancelUpload}>
+            Cancel
+          </button>
         </div>
       )}
     </div>
