@@ -5,6 +5,7 @@ import "./SingupPage.css";
 import Globe from "../../components/Globe"; // 🌍 background globe
 
 export default function SignupPage() {
+  console.log("SignUpPage")
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -26,31 +27,38 @@ export default function SignupPage() {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  console.log("Form submitted")
 
-    // Basic validation
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+  if (formData.password !== formData.confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  try {
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", formData.username);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("password", formData.password);
+
+    const response = await axios.post(
+      "https://backend-production-5e92.up.railway.app/signup",
+      formDataToSend,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    console.log("Backend" , response.data);
+
+    if (response.status === 200 || response.status === 201) {
+      alert("Signup successful! Please login.");
+      setTimeout(() => navigate("/login"),100);
     }
-
-    try {
-      const response = await axios.post("http://localhost:5000/signup", {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (response.status === 200) {
-        alert("Signup successful! Please login.");
-        navigate("/login"); // Redirect to login page
-      }
-    } catch (error) {
-      console.error("Signup failed:", error);
-      alert("Error during signup. Try again.");
-    }
-  };
+  } catch (error) {
+    console.error("Signup failed:", error);
+    alert("Error during signup. Try again.");
+  }
+};
 
   return (
     <div className="wrapper">
@@ -78,15 +86,7 @@ export default function SignupPage() {
             required
           />
 
-          <label>Phone</label>
-          <input
-            type="text"
-            name="phone"
-            placeholder="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
+         
 
           <label>Password</label>
           <input
@@ -109,7 +109,7 @@ export default function SignupPage() {
           />
 
           <div className="button-group">
-            <button type="submit">Submit</button>
+            <button type="submit" onClick={() => console.log("button clicked")}>Submit</button>
             <button type="reset">Reset</button>
           </div>
         </form>

@@ -101,6 +101,21 @@
   overflow-x: auto;
 }
 
+/* Live transaction card */
+.loop-transaction {
+  width: 100%;
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.live-card p {
+  margin: 0.3rem 0;
+  font-weight: 600;
+}
+
 /* Right Panel */
 .right-panel {
   flex: 1;
@@ -154,7 +169,36 @@ th {
 /* Status Colors */
 .status.approved { color: #22c55e; font-weight: 600; }
 .status.pending { color: #facc15; font-weight: 600; }
-.status.critical { color: #ef4444; font-weight: 600; }
+.status.rejected { color: #ef4444; font-weight: 600; }
+
+/* Approve and Reject buttons */
+.approve-btn, .reject-btn {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.approve-btn {
+  background-color: #22c55e;
+  color: white;
+}
+
+.approve-btn:hover {
+  background-color: #16a34a;
+}
+
+.reject-btn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.reject-btn:hover {
+  background-color: #dc2626;
+}
 
 /* Sidebar */
 .sidebar {
