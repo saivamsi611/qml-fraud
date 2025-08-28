@@ -108,7 +108,7 @@ button:hover {
 }
 
 /* Link at the bottom */
-.form-link {
+.form-link,.forget-password {
   margin-top: 1.5rem;
   text-align: center;
   font-size: 0.9rem;

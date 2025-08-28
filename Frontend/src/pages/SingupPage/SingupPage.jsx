@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SingupPage.css";
-import Globe from "../../components/Globe"; // 🌍 background globe
+import Globe from "../../components/Globe";
 
 export default function SignupPage() {
-  console.log("SignUpPage")
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -14,12 +13,10 @@ export default function SignupPage() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    phone: "",
     password: "",
     confirmPassword: "",
   });
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -28,10 +25,19 @@ export default function SignupPage() {
     }));
   };
 
-  // Handle form submission
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log("Form submitted")
+  const handleReset = () => {
+    setFormData({
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
@@ -61,7 +67,7 @@ const handleSubmit = async (e) => {
       <Globe />
       <div className="console-panel">
         <h2>Sign up here</h2>
-        <form id="SignUpForm" onSubmit={handleSubmit}>
+        <form id="SignUpForm" onSubmit={handleSubmit} onReset={handleReset}>
           <label>Username</label>
           <input
             type="text"
@@ -81,8 +87,6 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             required
           />
-
-         
 
           <label>Password</label>
           <div className="password-field">
@@ -128,12 +132,17 @@ const handleSubmit = async (e) => {
             <button type="submit" disabled={loading}>
               {loading ? "Submitting..." : "Submit"}
             </button>
-            <button type="reset">Reset</button>
+            <button type="reset" disabled={loading}>
+              Reset
+            </button>
           </div>
         </form>
 
         <p className="form-link">
           Already registered? <Link to="/login">Login</Link>
+        </p>
+        <p className="forget-password">
+          Forgot password? <Link to="/ForgotPassword">Reset here</Link>
         </p>
       </div>
     </div>
