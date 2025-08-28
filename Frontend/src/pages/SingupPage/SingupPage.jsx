@@ -7,6 +7,8 @@ import Globe from "../../components/Globe"; // 🌍 background globe
 export default function SignupPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -19,34 +21,34 @@ export default function SignupPage() {
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/signup", {
-        username: formData.username,
+      setLoading(true);
+      const response = await axios.post("http://127.0.0.1:8080/signup", {
+        name: formData.username,
         email: formData.email,
         password: formData.password,
       });
+      setLoading(false);
 
-      if (response.status === 200) {
-        alert("Signup successful! Please login.");
-        navigate("/login"); // Redirect to login page
-      }
+      alert("Signup successful! Please login.");
+      navigate("/login");
     } catch (error) {
+      setLoading(false);
       console.error("Signup failed:", error);
       alert("Error during signup. Try again.");
     }
@@ -62,7 +64,7 @@ export default function SignupPage() {
           <input
             type="text"
             name="username"
-            placeholder="username"
+            placeholder="Username"
             value={formData.username}
             onChange={handleChange}
             required
@@ -72,7 +74,7 @@ export default function SignupPage() {
           <input
             type="email"
             name="email"
-            placeholder="email"
+            placeholder="Email"
             value={formData.email}
             onChange={handleChange}
             required
@@ -82,34 +84,56 @@ export default function SignupPage() {
           <input
             type="text"
             name="phone"
-            placeholder="phone"
+            placeholder="Phone"
             value={formData.phone}
             onChange={handleChange}
             required
           />
 
           <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="password-field">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            <button
+              type="button"
+              className="toggle-password-icon"
+              onClick={() => setShowPassword((prev) => !prev)}
+              aria-label="Toggle password visibility"
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
 
-          <label>Retype Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="retype password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
+          <label>Confirm Password</label>
+          <div className="password-field">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Retype Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+            <button
+              type="button"
+              className="toggle-password-icon"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              aria-label="Toggle confirm password visibility"
+            >
+              {showConfirmPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
 
           <div className="button-group">
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Submitting..." : "Submit"}
+            </button>
             <button type="reset">Reset</button>
           </div>
         </form>

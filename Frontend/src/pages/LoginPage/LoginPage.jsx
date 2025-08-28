@@ -8,15 +8,15 @@ import "./LoginPage.css";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(true);
+  const [formLoading, setFormLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
   const cardRef = useRef(null);
 
-  // Animate card on mount
   useEffect(() => {
-    // Loader stays ~1.2s
     const timer = setTimeout(() => setIsLoading(false), 1200);
     return () => clearTimeout(timer);
   }, []);
@@ -34,36 +34,45 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccessMsg("");
+    setFormLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:8080/login",
+        { email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      setFormLoading(false);
 
       if (response.data.success) {
         console.log("Login success:", response.data);
 
-        // store token if backend provides
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
         }
 
-        // redirect after login
-        navigate("/home");
+        setSuccessMsg("Login successful! Redirecting...");
+        setTimeout(() => navigate("/main"), 1500);
       } else {
         setError(response.data.message || "Invalid credentials");
       }
     } catch (err) {
+      setFormLoading(false);
       console.error("Login error:", err);
-      setError("Something went wrong. Please try again.");
+
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     }
   };
 
   return (
     <>
-      {/* Loader always shows first */}
-      <LinearLoader isLoading={isLoading} />
+      <LinearLoader isLoading={isLoading || formLoading} />
 
       {!isLoading && (
         <div className="login-wrapper">
@@ -78,6 +87,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={formLoading}
               />
 
               <label>Password</label>
@@ -87,12 +97,16 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={formLoading}
               />
 
-              <button type="submit">Log In</button>
+              <button type="submit" disabled={formLoading}>
+                {formLoading ? "Logging in..." : "Log In"}
+              </button>
             </form>
 
             {error && <p className="error-text">{error}</p>}
+            {successMsg && <p className="success-text">{successMsg}</p>}
 
             <div className="login-link">
               Don&apos;t have an account? <Link to="/signup">Sign up</Link>

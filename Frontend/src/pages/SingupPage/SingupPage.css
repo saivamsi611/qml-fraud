@@ -175,3 +175,37 @@ button:hover {
     max-height: 65vh;
   }
 }
+/* Password field wrapper */
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Password input inside password-field */
+.password-field input {
+  width: 100%;
+  padding-right: 2.5rem; /* space for icon */
+  margin-bottom: 1.4rem;
+}
+
+/* Icon button inside password field */
+.toggle-password-icon {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #aaa;
+  padding: 4px;
+  margin-bottom: 1.4rem;
+  transition: color 0.3s ease;
+}
+
+.toggle-password-icon:hover {
+  color: #7df9ff;
+}
+.password-field input {
+  padding-right: 2.2rem;
+}
