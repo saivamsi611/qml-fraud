@@ -13,6 +13,7 @@ export default function MainPage() {
   const [selectedProject, setSelectedProject] = useState(null);
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
+  const currentProjectName = localStorage.getItem("currentProject");
 
   const items = [
     "Welcome to the Fraud Detection Dashboard! ",
@@ -28,14 +29,20 @@ export default function MainPage() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/projects");
+        const res = await axios.get("http://localhost:8080/projects");
         setProjects(res.data || []);
+
+        // If currentProjectName exists in backend projects, set it as selected
+        if (currentProjectName) {
+          const current = res.data.find(p => p.name === currentProjectName);
+          if (current) setSelectedProject(current);
+        }
       } catch (err) {
         console.error("Error fetching projects:", err);
       }
     };
     fetchProjects();
-  }, []);
+  }, [currentProjectName]);
 
   // Handle clicks outside sidebar to close it
   useEffect(() => {
@@ -62,7 +69,7 @@ export default function MainPage() {
   // Add new project
   const handleAddProject = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/projects", {
+      const response = await axios.post("http://localhost:8080/projects", {
         name: "Untitled Project"
       });
       if (response.status === 201 || response.status === 200) {
@@ -78,7 +85,8 @@ export default function MainPage() {
   // Handle project selection
   const handleProjectClick = (project) => {
     setSelectedProject(project);
-    navigate("/main/form");
+    localStorage.setItem("currentProject", project.name); // Update localStorage
+    navigate("/main/form", { state: { project } });
   };
 
   return (
@@ -113,7 +121,17 @@ export default function MainPage() {
           <hr />
           <ul>
             <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
-            <li><Link to="/main/transactions">Transactions</Link></li> {/* Fixed route */}
+            <li>
+              {currentProjectName ? (
+                <Link to={`/main/ComparisionTab/${currentProjectName}`}>
+                  Comparison Tab
+                </Link>
+              ) : (
+                <span style={{ opacity: 0.5 }}>
+                  Comparison Tab (Select a project)
+                </span>
+              )}
+            </li>
           </ul>
           <hr />
           <ul>
@@ -129,6 +147,34 @@ export default function MainPage() {
             <li><Link to="/">Logout</Link></li>
           </ul>
         </div>
+
+        {/* Project Directory */}
+        {/* <div className="sidebar-projects">
+          <h3>Projects</h3>
+          <ul>
+            {projects.length === 0 ? (
+              <li>No Projects</li>
+            ) : (
+              projects.map((proj) => {
+                const isCurrent = proj.name === currentProjectName;
+                return (
+                  <li
+                    key={proj.id}
+                    className={isCurrent ? "active" : ""}
+                    onClick={() => handleProjectClick(proj)}
+                  >
+                    {proj.name} {isCurrent && "✅"}
+                  </li>
+                );
+              })
+            )}
+          </ul>
+          <FaPlusCircle
+            className="add-icon"
+            title="Add New Project"
+            onClick={handleAddProject}
+          />
+        </div> */}
       </aside>
 
       {/* Main content */}
@@ -156,7 +202,7 @@ export default function MainPage() {
           <div className="middle-section">
             {/* Left Pane - Project Directory */}
             <div className="left-pane">
-              <div className="ProjectDirectory">
+              {/* <div className="ProjectDirectory">
                 <h2>Project Directory</h2>
                 <hr />
                 <ul>
@@ -178,8 +224,8 @@ export default function MainPage() {
                   className="add-icon"
                   title="Add New Project"
                   onClick={handleAddProject}
-                />
-              </div>
+                /> */}
+              {/* </div> */}
             </div>
 
             {/* CSV Upload Section */}

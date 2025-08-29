@@ -11,7 +11,7 @@ import ReportsAndAnalytics from "./pages/ReportsAndAnalyticsPage/ReportsAndAnaly
 import Settings from './pages/Settings/Settings';
 import Helpus from './pages/HelpusPage/Helpus';
 import FormPage from "./pages/FormPage/FormPage";
-import TransactionPage from "./pages/TransactionPage/TransactionPage";
+import TransactionPage from "./pages/ComparisionPage/ComparisionPage";
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
       <Route path="/main/settings" element={<Settings />} />
       <Route path="/main/help" element={<Helpus />} />
       <Route path="/main/form" element={<FormPage />} />
-      <Route path="/main/transactions" element={<TransactionPage/>}/>
+      <Route path="/main/ComparisionTab/:project_name" element={<TransactionPage/>}/>
       {/* Add more routes as needed */}
     </Routes>
   );
