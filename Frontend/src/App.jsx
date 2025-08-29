@@ -12,6 +12,7 @@ import Settings from './pages/Settings/Settings';
 import Helpus from './pages/HelpusPage/Helpus';
 import FormPage from "./pages/FormPage/FormPage";
 import TransactionPage from "./pages/TransactionPage/TransactionPage";
+import PredictPage from "./pages/PredictPage/Predict";
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
       <Route path="/main/help" element={<Helpus />} />
       <Route path="/main/form" element={<FormPage />} />
       <Route path="/main/transactions" element={<TransactionPage/>}/>
+      <Route path="/main/predict"element={
+        <PredictPage/>
+      }></Route>
       {/* Add more routes as needed */}
     </Routes>
   );

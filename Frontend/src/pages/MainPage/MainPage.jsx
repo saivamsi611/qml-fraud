@@ -115,6 +115,10 @@ export default function MainPage() {
             <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
             <li><Link to="/main/transactions">Transactions</Link></li> {/* Fixed route */}
           </ul>
+          <ul>
+                        <li><Link to="/main/predict">Predict</Link></li>
+
+          </ul>
           <hr />
           <ul>
             <li><Link to="/main/settings">Settings</Link></li>

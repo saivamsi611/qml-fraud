@@ -1,0 +1,109 @@
+    /* Reset some basic stuff */
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Body */
+    body {
+    background-color: #f9fafb;
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
+    padding: 20px;
+    }
+
+    /* Container */
+    .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+    }
+
+    /* Headings */
+    h1, h2, h3 {
+    color: #222;
+    margin-bottom: 15px;
+    font-weight: 700;
+    }
+
+    h1 {
+    font-size: 2.5rem;
+    }
+
+    h2 {
+    font-size: 2rem;
+    }
+
+    /* Paragraphs */
+    p {
+    margin-bottom: 1rem;
+    color: #555;
+    }
+
+    /* Buttons */
+    button, .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    }
+
+    button:hover, .btn:hover {
+    background-color: #0056b3;
+    }
+
+    /* Inputs */
+    input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    }
+
+    /* Tables */
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    }
+
+    th, td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    }
+
+    th {
+    background-color: #f0f0f0;
+    font-weight: 700;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+    }

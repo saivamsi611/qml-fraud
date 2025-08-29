@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Globe from "../../components/Globe";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./FormPage.css"
+// import "./FormPage.css"
 export default function FormPage() {
   const navigate = useNavigate();
 
