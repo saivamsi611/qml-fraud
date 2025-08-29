@@ -114,6 +114,7 @@ export default function MainPage() {
           <ul>
             <li><Link to="/main/reportsAndAnalytics">Reports & Analytics</Link></li>
             <li><Link to="/main/transactions">Transactions</Link></li> {/* Fixed route */}
+            <li><Link to="/main/compare">Compare</Link></li>
           </ul>
           <ul>
                         <li><Link to="/main/predict">Predict</Link></li>

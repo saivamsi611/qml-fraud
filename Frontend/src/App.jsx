@@ -28,10 +28,8 @@ function App() {
       <Route path="/main/settings" element={<Settings />} />
       <Route path="/main/help" element={<Helpus />} />
       <Route path="/main/form" element={<FormPage />} />
-      <Route path="/main/transactions" element={<TransactionPage/>}/>
-      <Route path="/main/predict"element={
-        <PredictPage/>
-      }></Route>
+      <Route path="/main/transactions" element={<TransactionPage />} />
+      <Route path="/main/predict" element={<PredictPage />} />
       {/* Add more routes as needed */}
     </Routes>
   );
